@@ -9,6 +9,7 @@ import {
   Modal,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import { useState } from 'react';
 import SigninBtn from './SigninBtn';
@@ -22,7 +23,6 @@ export default function HomeScreen({ navigation }) {
   const [signUpModal, setSignUpModal] = useState(false);
 
   const [signUpFirstname, setSignUpFirstname] = useState('');
-  const [signUpLastname, setSignUpLastname] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
   const [signUpMail, setSignUpMail] = useState('');
 
@@ -46,14 +46,20 @@ export default function HomeScreen({ navigation }) {
       <Modal visible={signInModal} animationType='fade' transparent>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-          <TouchableOpacity style={styles.xmark} onPress={() => showSigninModal()}>
-            <FontAwesomeIcon icon={faXmark}/>
-          </TouchableOpacity>
-              <Text style={styles.inputLabel}>Email</Text>
-              <TextInput style={styles.inputs} onChangeText={ value => {setSignInMail(value)}} value={signInMail} placeholder='Enter your email'/>
-              <Text style={styles.inputLabel}>Password</Text>
-              <TextInput style={styles.inputs} onChangeText={ value => {setSignInPassword(value)}} value={signInPassword} placeholder='Enter your password'/>
-          <SigninBtn/>
+            <View style={styles.xmarkContainer}>
+              <TouchableOpacity onPress={() => showSigninModal()}>
+                <FontAwesomeIcon icon={faXmark} size={26}/>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Email</Text>
+                <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignInMail(value)}} value={signInMail} placeholder='Enter your email'/>
+                <Text style={styles.inputLabel}>Password</Text>
+                <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignInPassword(value)}} value={signInPassword} placeholder='Enter your password'/>
+                <SigninBtn/>
+              </View>
+
           </View>
         </View>
       </Modal>
@@ -62,20 +68,20 @@ export default function HomeScreen({ navigation }) {
       <Modal visible={signUpModal} animationType='fade' transparent>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-          <View style={styles.closeBtn}>
-          <TouchableOpacity style={styles.xmark} onPress={() => showSignupModal()}>
-            <FontAwesomeIcon icon={faXmark}/>
-          </TouchableOpacity>
-          </View>
-            <Text style={styles.inputLabel}>First name</Text>
-            <TextInput style={styles.inputs} onChangeText={ value => {setSignUpFirstname(value)}} value={signUpFirstname} placeholder='Enter your first name'/>
-            <Text style={styles.inputLabel}>Last name</Text>
-            <TextInput style={styles.inputs} onChangeText={ value => {setSignUpLastname(value)}} value={signUpLastname} placeholder='Enter your last name'/>
-            <Text style={styles.inputLabel}>Email</Text>
-            <TextInput style={styles.inputs} onChangeText={ value => {setSignUpMail(value)}} value={signUpMail} placeholder='Enter your email'/>
-            <Text style={styles.inputLabel}>Password</Text>
-            <TextInput style={styles.inputs} onChangeText={ value => {setSignUpPassword(value)}} value={signUpPassword} placeholder='Enter your password'/>
-            <SignUpBtn/>
+            <View style={styles.xmarkContainer}>
+                <TouchableOpacity onPress={() => showSignupModal()}>
+                    <FontAwesomeIcon icon={faXmark} size={26}/>
+                </TouchableOpacity>
+            </View>
+          <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>First name</Text>
+              <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignUpFirstname(value)}} value={signUpFirstname} placeholder='Enter your first name'/>
+              <Text style={styles.inputLabel}>Email</Text>
+              <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignUpMail(value)}} value={signUpMail} placeholder='Enter your email'/>
+              <Text style={styles.inputLabel}>Password</Text>
+              <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignUpPassword(value)}} value={signUpPassword} placeholder='Enter your password'/>
+              <SignUpBtn/>
+            </View>
           </View>
         </View>
       </Modal>
@@ -89,24 +95,25 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Welcome to My Sport Pal</Text>
-          <Text style={styles.text}>Only few more steps before meeting your new sport's pal</Text>
+          <Text style={styles.title}>Welcome to My Sport Pal !</Text>
+          <Text style={styles.text}>Only few more steps before meeting your new sport's pal.</Text>
+        </View>
+      </View>
+
+
+        <View style={styles.signInContainer}>
+            <Text style={styles.subText}>Already have an account ?</Text>
+            <SigninBtn showSigninModal={showSigninModal}/>
         </View>
 
-      </View>
+        <View style={styles.signUpContainer} blurRadius={signInModal ? 4 : 0}>
+            <Text style={styles.subText}>First time on My Sport Pal ?</Text>
+            <View style={styles.doubleBtnContainer}>
+                <SignUpBtn showSignupModal={showSignupModal}/>
+                <DiscoverBtn/>
+            </View>
+        </View>
 
-      <View style={styles.signInContainer}>
-      <Text style={styles.subText}>Already have an account ?</Text>
-      <SigninBtn showSigninModal={showSigninModal}/>
-      </View>
-
-      <View style={styles.signUpContainer}>
-      <Text style={styles.subText}>First time on My Sport Pal ?</Text>
-      <View style={styles.doubleBtnContainer}>
-        <SignUpBtn showSignupModal={showSignupModal}/>
-        <DiscoverBtn/>
-      </View>
-      </View>
     </KeyboardAvoidingView>
   )
 }
@@ -125,13 +132,12 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: 'white',
-    flexWrap: 'wrap',
-    overflow: 'auto',
     width: '80%',
-    height: '50%',
+    height: '45%',
     borderRadius: 20,
+    padding: 10,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -140,6 +146,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  inputContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 30,
+    width: '120%',
+    flexShrink: 1,
+
   },
   inputs: {
     width: '80%',
@@ -153,6 +167,11 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontFamily: 'Poppins-Light',
     fontSize: 15,
+  },
+  xmarkContainer: {
+    width: '100%',
+    height: '7%',
+    alignItems: 'flex-end'
   },
   // REST OF THE PAGE STYLE
   headerContainer: {
