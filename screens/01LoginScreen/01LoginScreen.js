@@ -40,10 +40,11 @@ export default function HomeScreen({ navigation }) {
 
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <View style={styles.container}>
 
         {/* MODAL FOR SIGN IN */}
       <Modal visible={signInModal} animationType='fade' transparent>
+      <KeyboardAvoidingView style={{flex: 1, justifyContent: 'flex-end'}}behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <View style={styles.xmarkContainer}>
@@ -62,10 +63,12 @@ export default function HomeScreen({ navigation }) {
 
           </View>
         </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* MODAL FOR SIGN UP */}
       <Modal visible={signUpModal} animationType='fade' transparent>
+      <KeyboardAvoidingView style={{flex: 1, justifyContent: 'flex-end'}}behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <View style={styles.xmarkContainer}>
@@ -84,6 +87,7 @@ export default function HomeScreen({ navigation }) {
             </View>
           </View>
         </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* REST OF THE PAGE */}
@@ -114,7 +118,7 @@ export default function HomeScreen({ navigation }) {
             </View>
         </View>
 
-    </KeyboardAvoidingView>
+    </View>
   )
 }
 
@@ -133,7 +137,8 @@ const styles = StyleSheet.create({
   modalView: {
     backgroundColor: 'white',
     width: '80%',
-    height: '45%',
+    minHeight: '25%',
+    maxHeight: '75%',
     borderRadius: 20,
     padding: 10,
     alignItems: 'center',
@@ -150,7 +155,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 30,
+    padding: 20,
     width: '120%',
     flexShrink: 1,
 
