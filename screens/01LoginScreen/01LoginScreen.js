@@ -67,7 +67,8 @@ export default function LoginScreen({ navigation }) {
           setSignUpFirstname('');
 					setSignUpMail('');
 					setSignUpPassword('');
-          // navigation.navigate('Quizz');
+          navigation.navigate('Quizz');
+          showSignupModal();
 				}
 			});
   }
