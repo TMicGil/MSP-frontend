@@ -9,16 +9,18 @@ import {
   Modal,
   TextInput,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native';
 import { useState } from 'react';
-import SigninBtn from './SigninBtn';
-import SignUpBtn from './SignUpBtn';
+import { signIn, signUp, logout } from '../../reducers/user';
+import { useDispatch, useSelector } from 'react-redux';
 import DiscoverBtn from './DiscoverBtn';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons/faXmark'
 
 export default function HomeScreen({ navigation }) {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
+
   const [signInModal, setSignInModal] = useState(false);
   const [signUpModal, setSignUpModal] = useState(false);
 
@@ -36,6 +38,38 @@ export default function HomeScreen({ navigation }) {
 
   const showSignupModal = () => {
     setSignUpModal(!signUpModal);
+  }
+
+  const handleSignIn = () => {
+    fetch('https://my-sport-13h7mn2pa-dedesss83.vercel.app/users/signin', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ email: signInMail, password: signInPassword }),
+		}).then(response => response.json())
+			.then(data => {
+        console.log(data)
+				if (data.result) {
+					dispatch(signIn({ email: data.email, token: data.token}));
+          setSignInMail('');
+					setSignInPassword('');
+				}
+			});
+  }
+
+  const handleSignUp = () => {
+      fetch('https://my-sport-13h7mn2pa-dedesss83.vercel.app/users/signup', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ firstname: signUpFirstname, email: signUpMail, password: signUpPassword }),
+		}).then(response => response.json())
+			.then(data => {
+				if (data.result) {
+					dispatch(signUp({ firstname: signUpFirstname, email: signUpMail, password: signUpPassword}));
+          setSignUpFirstname('');
+					setSignUpUsername('');
+					setSignUpPassword('');
+				}
+			});
   }
 
 
@@ -58,7 +92,9 @@ export default function HomeScreen({ navigation }) {
                 <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignInMail(value)}} value={signInMail} placeholder='Enter your email'/>
                 <Text style={styles.inputLabel}>Password</Text>
                 <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignInPassword(value)}} value={signInPassword} placeholder='Enter your password'/>
-                <SigninBtn/>
+                <TouchableOpacity onPress={() => handleSignIn()} style={styles.button} activeOpacity={0.8}>
+                    <Text style={styles.textButton}>Sign in</Text>
+                </TouchableOpacity>
               </View>
 
           </View>
@@ -83,7 +119,9 @@ export default function HomeScreen({ navigation }) {
               <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignUpMail(value)}} value={signUpMail} placeholder='Enter your email'/>
               <Text style={styles.inputLabel}>Password</Text>
               <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignUpPassword(value)}} value={signUpPassword} placeholder='Enter your password'/>
-              <SignUpBtn/>
+              <TouchableOpacity onPress={() => handleSignUp()} style={styles.button} activeOpacity={0.8}>
+                  <Text style={styles.textButton}>Sign Up</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -107,13 +145,17 @@ export default function HomeScreen({ navigation }) {
 
         <View style={styles.signInContainer}>
             <Text style={styles.subText}>Already have an account ?</Text>
-            <SigninBtn showSigninModal={showSigninModal}/>
+            <TouchableOpacity onPress={() => showSigninModal()} style={styles.button} activeOpacity={0.8}>
+                <Text style={styles.textButton}>Sign in</Text>
+            </TouchableOpacity>
         </View>
 
         <View style={styles.signUpContainer} blurRadius={signInModal ? 4 : 0}>
             <Text style={styles.subText}>First time on My Sport Pal ?</Text>
             <View style={styles.doubleBtnContainer}>
-                <SignUpBtn showSignupModal={showSignupModal}/>
+            <TouchableOpacity onPress={() => showSignupModal()} style={styles.signupButton} activeOpacity={0.8}>
+                <Text style={styles.textButton}>Sign Up</Text>
+            </TouchableOpacity>
                 <DiscoverBtn/>
             </View>
         </View>
@@ -225,12 +267,37 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 8,
+    width: '80%',
+    marginTop: 10,
+    backgroundColor: '#E74C3C',
+    borderRadius: 10,
+  },
+  textButton: {
+    color: '#ffffff',
+    height: 30,
+    fontWeight: '600',
+    fontSize: 16,
+    fontFamily: 'Poppins-Bold',
+  },
   signUpContainer: {
     marginTop: 20,
     top: 20,
     height: '10%',
     width: '100%',
     alignItems: 'center',
+  },
+  signupButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 8,
+    width: '40%',
+    marginTop: 10,
+    backgroundColor: '#E74C3C',
+    borderRadius: 10,
   },
   doubleBtnContainer: {
     width: '100%',

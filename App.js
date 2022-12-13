@@ -2,9 +2,12 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+// FONTS AND ICONS
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faGear, faHouse, faLocationArrow, faUser } from '@fortawesome/free-solid-svg-icons';
+// 
 import HomeScreen from './screens/03HomeScreen/03HomeScreen';
 import MapScreen from './screens/MapScreen/MapScreen';
 import SettingsScreen from './screens/SettingScreen/SettingsScreen';
@@ -12,6 +15,14 @@ import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
 import LoginScreen from './screens/01LoginScreen/01LoginScreen';
 import { useCallback } from 'react';
 import { Text } from 'react-native';
+// REDUCERS
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import user from './reducers/user';
+
+const store = configureStore({
+  reducer: { user },
+});
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -24,18 +35,18 @@ const TabNavigator = () => {
         let iconName = '';
 
         if (route.name === 'Map') {
-          iconName = 'fa-location-arrow';
+          iconName = faLocationArrow;
         } else if (route.name === 'Home') {
-          iconName = 'fa-house';
+          iconName = faHouse;
         } else if (route.name === 'Profile') {
-          iconName = 'fa-user';
+          iconName = faUser;
         } else if (route.name === 'Settings') {
-          iconName = 'fa-gear';
+          iconName = faGear;
         }
 
-        return <FontAwesome name={iconName} size={size} color={color} />;
+        return <FontAwesomeIcon name={iconName} size={size} color={color} />;
       },
-      tabBarActiveTintColor: '#ec6e5b',
+      tabBarActiveTintColor: '#E74C3C',
       tabBarInactiveTintColor: '#335561',
       headerShown: false,
     })}>
@@ -71,6 +82,7 @@ export default function App() {
   }
 
   return (
+    <Provider store={store}>
     <SafeAreaProvider onLayout={onLayoutRootView}>
        <NavigationContainer> 
         <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -79,5 +91,6 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
+    </Provider>
   );
 }
