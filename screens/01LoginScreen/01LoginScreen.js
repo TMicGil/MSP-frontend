@@ -39,7 +39,7 @@ export default function LoginScreen({ navigation }) {
   };
 
   const handleSignIn = () => {
-    fetch('https://my-sport-13h7mn2pa-dedesss83.vercel.app/users/signin', {
+    fetch('https://msp-backend.vercel.app/users/signin', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email: signInMail, password: signInPassword }),
@@ -56,7 +56,7 @@ export default function LoginScreen({ navigation }) {
   }
 
   const handleSignUp = () => {
-      fetch('https://my-sport-13h7mn2pa-dedesss83.vercel.app/users/signup', {
+      fetch('https://msp-backend.vercel.app/users/signup', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ firstname: signUpFirstname, email: signUpMail, password: signUpPassword }),
