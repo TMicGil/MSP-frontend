@@ -1,4 +1,3 @@
-
 import {
   Image,
   KeyboardAvoidingView,
@@ -9,13 +8,13 @@ import {
   Modal,
   TextInput,
   TouchableOpacity,
-} from 'react-native';
-import { useState } from 'react';
-import { signIn, signUp, logout } from '../../reducers/user';
-import { useDispatch, useSelector } from 'react-redux';
-import DiscoverBtn from './DiscoverBtn';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons/faXmark'
+} from "react-native";
+import { useState } from "react";
+import { signIn, signUp, logout } from "../../reducers/user";
+import { useDispatch, useSelector } from "react-redux";
+import DiscoverBtn from "./DiscoverBtn";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -24,21 +23,20 @@ export default function LoginScreen({ navigation }) {
   const [signInModal, setSignInModal] = useState(false);
   const [signUpModal, setSignUpModal] = useState(false);
 
-  const [signUpFirstname, setSignUpFirstname] = useState('');
-  const [signUpPassword, setSignUpPassword] = useState('');
-  const [signUpMail, setSignUpMail] = useState('');
+  const [signUpFirstname, setSignUpFirstname] = useState("");
+  const [signUpPassword, setSignUpPassword] = useState("");
+  const [signUpMail, setSignUpMail] = useState("");
 
-  const [signInMail, setSignInMail] = useState('');
-  const [signInPassword, setSignInPassword] = useState(''); 
-
+  const [signInMail, setSignInMail] = useState("");
+  const [signInPassword, setSignInPassword] = useState("");
 
   const showSigninModal = () => {
     setSignInModal(!signInModal);
-  }
+  };
 
   const showSignupModal = () => {
     setSignUpModal(!signUpModal);
-  }
+  };
 
   const handleSignIn = () => {
     fetch('https://my-sport-13h7mn2pa-dedesss83.vercel.app/users/signin', {
@@ -77,117 +75,178 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-
-        {/* MODAL FOR SIGN IN */}
-      <Modal visible={signInModal} animationType='fade' transparent>
-      <KeyboardAvoidingView style={{flex: 1, justifyContent: 'flex-end'}}behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View style={styles.xmarkContainer}>
-              <TouchableOpacity onPress={() => showSigninModal()}>
-                <FontAwesomeIcon icon={faXmark} size={26}/>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Email</Text>
-                <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignInMail(value)}} value={signInMail} placeholder='Enter your email'/>
-                <Text style={styles.inputLabel}>Password</Text>
-                <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignInPassword(value)}} value={signInPassword} placeholder='Enter your password'/>
-                <TouchableOpacity onPress={() => handleSignIn()} style={styles.button} activeOpacity={0.8}>
-                    <Text style={styles.textButton}>Sign in</Text>
+      {/* MODAL FOR SIGN IN */}
+      <Modal visible={signInModal} animationType="fade" transparent>
+        <KeyboardAvoidingView
+          style={{ flex: 1, justifyContent: "flex-end" }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View style={styles.xmarkContainer}>
+                <TouchableOpacity onPress={() => showSigninModal()}>
+                  <FontAwesomeIcon icon={faXmark} size={26} />
                 </TouchableOpacity>
               </View>
 
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Email</Text>
+                <TextInput
+                  style={styles.inputs}
+                  placeholderTextColor="#ccd1e8"
+                  onChangeText={(value) => {
+                    setSignInMail(value);
+                  }}
+                  value={signInMail}
+                  placeholder="Enter your email"
+                />
+                <Text style={styles.inputLabel}>Password</Text>
+                <TextInput
+                  style={styles.inputs}
+                  placeholderTextColor="#ccd1e8"
+                  onChangeText={(value) => {
+                    setSignInPassword(value);
+                  }}
+                  value={signInPassword}
+                  placeholder="Enter your password"
+                />
+                <TouchableOpacity
+                  onPress={() => handleSignIn()}
+                  style={styles.button}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.textButton}>Sign in</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
-        </View>
         </KeyboardAvoidingView>
       </Modal>
 
       {/* MODAL FOR SIGN UP */}
-      <Modal visible={signUpModal} animationType='fade' transparent>
-      <KeyboardAvoidingView style={{flex: 1, justifyContent: 'flex-end'}}behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View style={styles.xmarkContainer}>
+      <Modal visible={signUpModal} animationType="fade" transparent>
+        <KeyboardAvoidingView
+          style={{ flex: 1, justifyContent: "flex-end" }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View style={styles.xmarkContainer}>
                 <TouchableOpacity onPress={() => showSignupModal()}>
-                    <FontAwesomeIcon icon={faXmark} size={26}/>
+                  <FontAwesomeIcon icon={faXmark} size={26} />
                 </TouchableOpacity>
-            </View>
-          <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>First name</Text>
-              <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignUpFirstname(value)}} value={signUpFirstname} placeholder='Enter your first name'/>
-              <Text style={styles.inputLabel}>Email</Text>
-              <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignUpMail(value)}} value={signUpMail} placeholder='Enter your email'/>
-              <Text style={styles.inputLabel}>Password</Text>
-              <TextInput style={styles.inputs} placeholderTextColor="#ccd1e8" onChangeText={ value => {setSignUpPassword(value)}} value={signUpPassword} placeholder='Enter your password'/>
-              <TouchableOpacity onPress={() => handleSignUp()} style={styles.button} activeOpacity={0.8}>
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>First name</Text>
+                <TextInput
+                  style={styles.inputs}
+                  placeholderTextColor="#ccd1e8"
+                  onChangeText={(value) => {
+                    setSignUpFirstname(value);
+                  }}
+                  value={signUpFirstname}
+                  placeholder="Enter your first name"
+                />
+                <Text style={styles.inputLabel}>Email</Text>
+                <TextInput
+                  style={styles.inputs}
+                  placeholderTextColor="#ccd1e8"
+                  onChangeText={(value) => {
+                    setSignUpMail(value);
+                  }}
+                  value={signUpMail}
+                  placeholder="Enter your email"
+                />
+                <Text style={styles.inputLabel}>Password</Text>
+                <TextInput
+                  style={styles.inputs}
+                  placeholderTextColor="#ccd1e8"
+                  onChangeText={(value) => {
+                    setSignUpPassword(value);
+                  }}
+                  value={signUpPassword}
+                  placeholder="Enter your password"
+                />
+                <TouchableOpacity
+                  onPress={() => handleSignUp()}
+                  style={styles.button}
+                  activeOpacity={0.8}
+                >
                   <Text style={styles.textButton}>Sign Up</Text>
-              </TouchableOpacity>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
         </KeyboardAvoidingView>
       </Modal>
 
       {/* REST OF THE PAGE */}
       <View style={styles.headerContainer}>
-
         <View>
-        <Image style={styles.image} 
-              source={require('../../assets/loginimage.jpg')}/>
+          <Image
+            style={styles.image}
+            source={require("../../assets/loginimage.jpg")}
+          />
         </View>
 
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Welcome to My Sport Pal !</Text>
-          <Text style={styles.text}>Only few more steps before meeting your new sport's pal.</Text>
+          <Text style={styles.text}>
+            Only few more steps before meeting your new sport's pal.
+          </Text>
         </View>
       </View>
 
+      <View style={styles.signInContainer}>
+        <Text style={styles.subText}>Already have an account ?</Text>
+        <TouchableOpacity
+          onPress={() => showSigninModal()}
+          style={styles.button}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.textButton}>Sign in</Text>
+        </TouchableOpacity>
+      </View>
 
-        <View style={styles.signInContainer}>
-            <Text style={styles.subText}>Already have an account ?</Text>
-            <TouchableOpacity onPress={() => showSigninModal()} style={styles.button} activeOpacity={0.8}>
-                <Text style={styles.textButton}>Sign in</Text>
-            </TouchableOpacity>
+      <View style={styles.signUpContainer} blurRadius={signInModal ? 4 : 0}>
+        <Text style={styles.subText}>First time on My Sport Pal ?</Text>
+        <View style={styles.doubleBtnContainer}>
+          <TouchableOpacity
+            onPress={() => showSignupModal()}
+            style={styles.signupButton}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.textButton}>Sign Up</Text>
+          </TouchableOpacity>
+          <DiscoverBtn />
         </View>
-
-        <View style={styles.signUpContainer} blurRadius={signInModal ? 4 : 0}>
-            <Text style={styles.subText}>First time on My Sport Pal ?</Text>
-            <View style={styles.doubleBtnContainer}>
-            <TouchableOpacity onPress={() => showSignupModal()} style={styles.signupButton} activeOpacity={0.8}>
-                <Text style={styles.textButton}>Sign Up</Text>
-            </TouchableOpacity>
-                <DiscoverBtn/>
-            </View>
-        </View>
-
+      </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   // MODALS STYLE
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalView: {
-    backgroundColor: 'white',
-    width: '80%',
-    minHeight: '25%',
-    maxHeight: '75%',
+    backgroundColor: "white",
+    width: "80%",
+    minHeight: "25%",
+    maxHeight: "75%",
     borderRadius: 20,
     padding: 10,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    shadowColor: '#000',
+    alignItems: "center",
+    justifyContent: "flex-start",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -197,114 +256,111 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   inputContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
-    width: '120%',
+    width: "120%",
     flexShrink: 1,
-
   },
   inputs: {
-    width: '80%',
-    height: '10%',
+    width: "80%",
+    height: "10%",
     margin: 20,
     paddingLeft: 10,
-    borderBottomColor: '#E74C3C',
+    borderBottomColor: "#E74C3C",
     borderBottomWidth: 1,
     fontSize: 16,
   },
   inputLabel: {
-    fontFamily: 'Poppins-Light',
+    fontFamily: "Poppins-Light",
     fontSize: 15,
   },
   xmarkContainer: {
-    width: '100%',
-    height: '7%',
-    alignItems: 'flex-end'
+    width: "100%",
+    height: "7%",
+    alignItems: "flex-end",
   },
   // REST OF THE PAGE STYLE
   headerContainer: {
-    width: '100%',
-    height: '60%',
-    position: 'relative',
+    width: "100%",
+    height: "60%",
+    position: "relative",
   },
   image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: '10%',
+    width: "100%",
+    height: "100%",
+    borderRadius: "10%",
     opacity: 0.9,
   },
   titleContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '80%',
-    position: 'absolute',
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80%",
+    position: "absolute",
     bottom: 30,
     left: 30,
-
   },
   title: {
     fontSize: 38,
-    fontWeight: '700',
-    color: 'white',
-    textShadowColor: 'black',
-    textShadowOffset: {width: -1, height: 1},
+    fontWeight: "700",
+    color: "white",
+    textShadowColor: "black",
+    textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
   },
   text: {
     fontSize: 20,
-    color: 'white',
-    textShadowColor: 'black',
-    textShadowOffset: {width: -1, height: 1},
+    color: "white",
+    textShadowColor: "black",
+    textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
   },
   subText: {
     fontSize: 20,
-    fontFamily: 'Poppins-Light',
+    fontFamily: "Poppins-Light",
   },
   signInContainer: {
     marginTop: 20,
-    height: '10%',
-    width: '100%',
-    alignItems: 'center',
+    height: "10%",
+    width: "100%",
+    alignItems: "center",
   },
   button: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingTop: 8,
-    width: '80%',
+    width: "80%",
     marginTop: 10,
-    backgroundColor: '#E74C3C',
+    backgroundColor: "#E74C3C",
     borderRadius: 10,
   },
   textButton: {
-    color: '#ffffff',
+    color: "#ffffff",
     height: 30,
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 16,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: "Poppins-Bold",
   },
   signUpContainer: {
     marginTop: 20,
     top: 20,
-    height: '10%',
-    width: '100%',
-    alignItems: 'center',
+    height: "10%",
+    width: "100%",
+    alignItems: "center",
   },
   signupButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingTop: 8,
-    width: '40%',
+    width: "40%",
     marginTop: 10,
-    backgroundColor: '#E74C3C',
+    backgroundColor: "#E74C3C",
     borderRadius: 10,
   },
   doubleBtnContainer: {
-    width: '100%',
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-around',
-    
-  }
+    width: "100%",
+    flexDirection: "row-reverse",
+    justifyContent: "space-around",
+  },
 });
