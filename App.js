@@ -91,14 +91,14 @@ export default function App() {
        <NavigationContainer> 
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Quizz" component={QuizzScreen} />
+          {/* <Stack.Screen name="Quizz" component={QuizzScreen} /> 
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Map" component={MapScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Event" component={EventScreen} />
           <Stack.Screen name="MyEvent" component={MyEventScreen} />
           <Stack.Screen name="MessageScreen" component={MessageScreen} />
-          <Stack.Screen name="Settings" component={SettingsScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />*/}
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
