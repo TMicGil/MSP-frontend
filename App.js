@@ -7,12 +7,16 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faGear, faHouse, faLocationArrow, faUser } from '@fortawesome/free-solid-svg-icons';
-// 
-import HomeScreen from './screens/03HomeScreen/03HomeScreen';
-import MapScreen from './screens/MapScreen/MapScreen';
-import SettingsScreen from './screens/SettingScreen/SettingsScreen';
-import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
+// SCREENS
 import LoginScreen from './screens/01LoginScreen/01LoginScreen';
+import QuizzScreen from './screens/02QuizzScreen/02QuizzScreen';
+import HomeScreen from './screens/03HomeScreen/03HomeScreen';
+import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
+import MapScreen from './screens/MapScreen/MapScreen';
+import EventScreen from './screens/EventScreen/EventScreen';
+import MyEventScreen from './screens/MyEventScreen/MyEventScreen';
+import MessageScreen from './screens/MessagesScreen/MessagesScreen';
+import SettingsScreen from './screens/SettingScreen/SettingsScreen';
 import { useCallback } from 'react';
 import { Text } from 'react-native';
 // REDUCERS
@@ -87,6 +91,14 @@ export default function App() {
        <NavigationContainer> 
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Quizz" component={QuizzScreen} />
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Map" component={MapScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Event" component={EventScreen} />
+          <Stack.Screen name="MyEvent" component={MyEventScreen} />
+          <Stack.Screen name="MessageScreen" component={MessageScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>

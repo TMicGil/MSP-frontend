@@ -17,7 +17,7 @@ import DiscoverBtn from './DiscoverBtn';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons/faXmark'
 
-export default function HomeScreen({ navigation }) {
+export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
 
@@ -52,6 +52,7 @@ export default function HomeScreen({ navigation }) {
 					dispatch(signIn({ email: data.email, token: data.token}));
           setSignInMail('');
 					setSignInPassword('');
+          navigation.navigate('Home');
 				}
 			});
   }
@@ -68,6 +69,7 @@ export default function HomeScreen({ navigation }) {
           setSignUpFirstname('');
 					setSignUpUsername('');
 					setSignUpPassword('');
+          navigation.navigate('Quizz');
 				}
 			});
   }
