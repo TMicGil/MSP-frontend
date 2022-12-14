@@ -1,12 +1,9 @@
 import {
-    KeyboardAvoidingView,
     StyleSheet,
     Text,
     View,
-    TextInput,
     TouchableOpacity,
     ImageBackground,
-    ScrollView
   } from "react-native";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -14,10 +11,13 @@ import { faPerson, faPersonDress } from "@fortawesome/free-solid-svg-icons";
 import { MultipleSelectList } from "react-native-dropdown-select-list";
 import { SelectList } from "react-native-dropdown-select-list";
 import DatePicker from '@react-native-community/datetimepicker';
+import { useSelector } from "react-redux";
 
 
 
   export default function QuizzScreen({ navigation }) {
+
+    const user = useSelector((state) => state.user.value)
 
     const [isMale, setIsMale] = useState(false);
     const [dateBirth, setDateBirth] = useState(new Date())
@@ -33,13 +33,11 @@ import DatePicker from '@react-native-community/datetimepicker';
         setIsMale(false)
       }
     }
-    console.log('male', isMale, 'female', !isMale)
 
     // FUNCTION FOR DATE SELECTION
     const dateBirthSelected = (event, value) => {
       setDateBirth(value)
     }
-    console.log(dateBirth)
 
     // FUNCTION FOR MIXED SEX
     const handleMixed = (mix) => {
@@ -48,18 +46,34 @@ import DatePicker from '@react-native-community/datetimepicker';
       } else if (mix === 'only') {
         setMixed(false)
       }
+    }
 
+    // FUNCTION FOR GO HOMEPAGE
+    const handleGo = () => {
+      const body = { token: user.token, sex: isMale, dateOfBirth: dateBirth, sport: sportPractice, level: level, mixedSex: mixed}
+      fetch('https://msp-backend.vercel.app/users/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      }).then(response => response.json())
+      .then(data => {
+        if (data.result) {
+            navigation.navigate('Home')
+        }
+      });
     }
 
     const data = [
         {key: '1', value: 'Running'},
+        {key: '2', value: 'Hiking'},
+        {key: '2', value: 'Snorkeling'},
         {key: '2', value: 'Tennis'},
         {key: '3', value: 'Cycling'},
         {key: '4', value: 'Basketball'},
         {key: '5', value: 'Football'},
     ]
 
-    const data2 = ['Amateur', 'Medium', 'Semi-Pro', 'Pro', 'Later']
+    const data2 = ['Amateur', 'Medium', 'Semi-Pro', 'Pro']
 
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
@@ -69,7 +83,7 @@ import DatePicker from '@react-native-community/datetimepicker';
             </View>
 
             <View style={styles.subHeaderContainer}>
-                <Text style={styles.subHeaderText}>Welcome Name !</Text>
+                <Text style={styles.subHeaderText}>Welcome {user.firstname} !</Text>
             </View>
 
             {/* CHOICE OF SEX */}
@@ -103,7 +117,7 @@ import DatePicker from '@react-native-community/datetimepicker';
                           style={styles.calendar}
                           mode="date"
                           value={dateBirth}
-                          maximumDate={new Date()}
+                          maximumDate={new Date(2010, 1, 1)}
                           minimumDate={new Date(1950, 1, 1)}
                           textColor='#E74C3C'
                           accentColor='#E74C3C'
@@ -119,7 +133,6 @@ import DatePicker from '@react-native-community/datetimepicker';
                             setSelected={(val) => setSportPractice(val)}
                             data={data}
                             save='value'
-                            onSelect={() => console.log(sportPractice)}
                             search={false}
                             placeholder="Select sports you practice"
                             label="Sports selected"
@@ -140,7 +153,6 @@ import DatePicker from '@react-native-community/datetimepicker';
                     placeholder="Select your level"
                     data={data2}
                     setSelected={setLevel}
-                    onSelect={() => console.log(level)}
                     search={false}
                     boxStyles={{backgroundColor: 'white'}}
                     inputStyles={{color: '#E74C3C'}}
@@ -158,7 +170,7 @@ import DatePicker from '@react-native-community/datetimepicker';
                             alignItems: "center",
                             justifyContent: "center",
                             width: '40%',
-                            height:'47%',
+                            height:'40%',
                             borderRadius: 10,
                           }}>
                               <Text style={styles.textButton}>MIXED</Text>
@@ -168,14 +180,14 @@ import DatePicker from '@react-native-community/datetimepicker';
                             alignItems: "center",
                             justifyContent: "center",
                             width: '40%',
-                            height:'47%',
+                            height:'40%',
                             borderRadius: 10,
                           }}>
                               <Text style={styles.textButton}>ONLY</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.goContainer}>
-                    <TouchableOpacity style={styles.goButton}>
+                    <TouchableOpacity onPress={() => handleGo()} style={styles.goButton}>
                         <Text style={styles.textButton}>GO ! </Text>
                     </TouchableOpacity>
                     </View>
@@ -204,15 +216,6 @@ import DatePicker from '@react-native-community/datetimepicker';
         alignItems: 'flex-start',
         paddingLeft: 10,
       },
-      headerText: {
-        fontSize: 45,
-        fontWeight: "700",
-        color: "white",
-        fontFamily: "Poppins-Bold",
-        textShadowColor: "black",
-        textShadowOffset: { width: -1, height: 1 },
-        textShadowRadius: 20,
-      },
       subHeaderContainer: {
         alignItems: 'center',
         width: '100%',
@@ -220,30 +223,30 @@ import DatePicker from '@react-native-community/datetimepicker';
         paddingLeft: 10,
         paddingTop: 10,
       },
+      sexContainer: {
+        flexDirection: 'row',
+        width: '80%',
+        justifyContent: 'space-around',
+      },
       quizzContainer: {
         marginTop: 20,
       },
       sectionContainer: {
         marginVertical: 5,
       },
-      sexContainer: {
-        flexDirection: 'row',
-        width: '80%',
-        justifyContent: 'space-around',
-      },
-      mixedContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '80%',
-      },
       calendarContainer: {
         width: '100%',
         alignItems: 'center',
       },
+      mixedContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '90%',
+      },
       goContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
-        height: '30%'
+        height: '30%',
       },
       calendar: {
         backgroundColor: '#E74C3C',
@@ -274,6 +277,15 @@ import DatePicker from '@react-native-community/datetimepicker';
         fontFamily: "Poppins-Bold",
       },
     //   TEXT
+    headerText: {
+      fontSize: 45,
+      fontWeight: "700",
+      color: "white",
+      fontFamily: "Poppins-Bold",
+      textShadowColor: "black",
+      textShadowOffset: { width: -1, height: 1 },
+      textShadowRadius: 20,
+    },
     subHeaderText: {
       fontFamily: "Poppins-Medium",
       fontSize: 25,

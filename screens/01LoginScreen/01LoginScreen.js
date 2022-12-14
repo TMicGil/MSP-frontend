@@ -10,15 +10,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useState } from "react";
-import { signIn, signUp, logout } from "../../reducers/user";
-import { useDispatch, useSelector } from "react-redux";
+import { signIn, signUp } from "../../reducers/user";
+import { useDispatch } from "react-redux";
 import DiscoverBtn from "./DiscoverBtn";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.value);
 
   const [signInModal, setSignInModal] = useState(false);
   const [signUpModal, setSignUpModal] = useState(false);
@@ -64,7 +63,7 @@ export default function LoginScreen({ navigation }) {
 		}).then(response => response.json())
 			.then(data => {
 				if (data.result) {
-					dispatch(signUp({ firstname: signUpFirstname, email: signUpMail, password: signUpPassword}));
+					dispatch(signUp({ firstname: signUpFirstname, email: signUpMail, password: signUpPassword, token: data.token}));
           setSignUpFirstname('');
 					setSignUpMail('');
 					setSignUpPassword('');
