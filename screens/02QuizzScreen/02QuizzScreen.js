@@ -1,25 +1,55 @@
 import {
-    Image,
     KeyboardAvoidingView,
     StyleSheet,
     Text,
     View,
-    Modal,
     TextInput,
     TouchableOpacity,
     ImageBackground,
+    ScrollView
   } from "react-native";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPerson, faPersonDress } from "@fortawesome/free-solid-svg-icons";
 import { MultipleSelectList } from "react-native-dropdown-select-list";
 import { SelectList } from "react-native-dropdown-select-list";
+import DatePicker from '@react-native-community/datetimepicker';
+
 
 
   export default function QuizzScreen({ navigation }) {
 
+    const [isMale, setIsMale] = useState(false);
+    const [dateBirth, setDateBirth] = useState(new Date())
     const [sportPractice, setSportPractice] = useState([]);
     const [level, setLevel] = useState('');
+    const [mixed, setMixed] = useState(false);
+
+    // FUNCTION FOR BUTTON SEX
+    const handleSex = (sex) => {
+      if (sex === 'male') {
+        setIsMale(true)
+      } else if (sex === 'female') {
+        setIsMale(false)
+      }
+    }
+    console.log('male', isMale, 'female', !isMale)
+
+    // FUNCTION FOR DATE SELECTION
+    const dateBirthSelected = (event, value) => {
+      setDateBirth(value)
+    }
+    console.log(dateBirth)
+
+    // FUNCTION FOR MIXED SEX
+    const handleMixed = (mix) => {
+      if (mix === 'mixed') {
+        setMixed(true)
+      } else if (mix === 'only') {
+        setMixed(false)
+      }
+
+    }
 
     const data = [
         {key: '1', value: 'Running'},
@@ -42,84 +72,113 @@ import { SelectList } from "react-native-dropdown-select-list";
                 <Text style={styles.subHeaderText}>Welcome Name !</Text>
             </View>
 
-            {/* SPORTS SELECTION */}
+            {/* CHOICE OF SEX */}
+            <View style={styles.sexContainer}>
+                <TouchableOpacity onPress={() => handleSex('male')} 
+                style={{backgroundColor: isMale ? '#E74C3C' : 'grey',
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 10,
+                marginTop: 10,
+                borderRadius: 100}}>
+                    <FontAwesomeIcon style={styles.textButton} icon={faPerson} size={26}/>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => handleSex('female')} style={{backgroundColor: !isMale ? '#E74C3C' : 'grey',
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 10,
+                marginTop: 10,
+                borderRadius: 100}}>
+                    <FontAwesomeIcon style={styles.textButton} icon={faPersonDress} size={26}/>
+                </TouchableOpacity>
+            </View>
+            
             <View style={styles.quizzContainer}>
+                {/* DATE OF BIRTH SELECTION */}
                 <View>
-                    <Text style={styles.questionText}>What sport do you practice ?</Text>
-                    <MultipleSelectList
-                    setSelected={(val) => setSportPractice(val)}
-                    data={data}
-                    save='value'
-                    onSelect={() => console.log(sportPractice)}
-                    search={false}
-                    placeholder="Select sports you practice"
-                    label="Sports selected"
-                    labelStyles={{color: '#E74C3C'}}
-                    badgeStyles={{backgroundColor: '#E74C3C'}}
-                    badgeTextStyles={{color: 'white', fontSize: 16}}
-                    boxStyles={{backgroundColor: 'white'}}
-                    inputStyles={{color: '#E74C3C'}}
-                    dropdownStyles={{backgroundColor: 'white'}}
-                    dropdownTextStyles={{fontSize: 16}}
-                    maxHeight={200}/>
+                    <Text style={styles.questionText}>What is your date of birth ?</Text>
+                    <View style={styles.calendarContainer}>
+                        <DatePicker
+                          style={styles.calendar}
+                          mode="date"
+                          value={dateBirth}
+                          maximumDate={new Date()}
+                          minimumDate={new Date(1950, 1, 1)}
+                          textColor='#E74C3C'
+                          accentColor='#E74C3C'
+                          onChange={dateBirthSelected}
+                          />
+                      </View>
                 </View>
 
+                   {/* SPORTS SELECTION */}
+                    <View style={styles.sectionContainer}>
+                        <Text style={styles.questionText}>What sport do you practice ?</Text>
+                        <MultipleSelectList
+                            setSelected={(val) => setSportPractice(val)}
+                            data={data}
+                            save='value'
+                            onSelect={() => console.log(sportPractice)}
+                            search={false}
+                            placeholder="Select sports you practice"
+                            label="Sports selected"
+                            labelStyles={{color: '#E74C3C'}}
+                            badgeStyles={{backgroundColor: '#E74C3C'}}
+                            badgeTextStyles={{color: 'white', fontSize: 16}}
+                            boxStyles={{backgroundColor: 'white'}}
+                            inputStyles={{color: '#E74C3C'}}
+                            dropdownStyles={{backgroundColor: 'white'}}
+                            dropdownTextStyles={{fontSize: 16}}
+                            maxHeight={200}/>
+                      </View>
+
                 {/* LEVEL SELECTION */}
-                <View>
+                <View style={styles.sectionContainer}>
                     <Text style={styles.questionText}>What is your level ?</Text>
                     <SelectList
                     placeholder="Select your level"
                     data={data2}
                     setSelected={setLevel}
+                    onSelect={() => console.log(level)}
                     search={false}
                     boxStyles={{backgroundColor: 'white'}}
                     inputStyles={{color: '#E74C3C'}}
                     dropdownStyles={{backgroundColor: 'white'}}
                     dropdownTextStyles={{fontSize: 16}}
-                    maxHeight={150}/>
+                    maxHeight={150}
+                    />
                 </View>
 
-                <View>
-                    <Text style={styles.questionText}>What is your date of birth ?</Text>
-                </View>
-
-                <View style={styles.sexContainer}>
-                <TouchableOpacity style={styles.sexButton}>
-                    <FontAwesomeIcon style={styles.textButton} icon={faPerson} size={26}/>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.sexButton}>
-                    <FontAwesomeIcon style={styles.textButton} icon={faPersonDress} size={26}/>
-                </TouchableOpacity>
-                </View>
-
-                <View>
+                {/* MIXED SEX CHOICE */}
+                <View style={styles.sectionContainer}>
                     <Text style={styles.questionText}>Sport's Pal from your sex only or mixed ?</Text>
-                </View>
+                    <View style={styles.mixedContainer}>
+                        <TouchableOpacity onPress={() => handleMixed('mixed')} style={{backgroundColor: mixed ? '#E74C3C' : 'grey',
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: '40%',
+                            height:'47%',
+                            borderRadius: 10,
+                          }}>
+                              <Text style={styles.textButton}>MIXED</Text>
+                        </TouchableOpacity>
 
-                <View style={styles.sexContainer}>
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.textButton}>MIXED</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.textButton}>ONLY</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.textButton}>LATER</Text>
-                </TouchableOpacity>
-                </View>
-
-                <View>
-                    <Text style={styles.questionText}>Changing like the seasons ?</Text>
-                    <Text style={styles.textEnd}>You will be able to update your preferences later in your profile section !</Text>
-                </View>
-
-                <View style={styles.goContainer}>
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.textButton}>GO</Text>
-                </TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleMixed('only')} style={{backgroundColor: !mixed ? '#E74C3C' : 'grey',
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: '40%',
+                            height:'47%',
+                            borderRadius: 10,
+                          }}>
+                              <Text style={styles.textButton}>ONLY</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.goContainer}>
+                    <TouchableOpacity style={styles.goButton}>
+                        <Text style={styles.textButton}>GO ! </Text>
+                    </TouchableOpacity>
+                    </View>
                 </View>
 
             </View>
@@ -130,15 +189,14 @@ import { SelectList } from "react-native-dropdown-select-list";
   }
 
   const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center",
-        marginTop: 42,
-        marginHorizontal: 10,
-      },
       imgBackground: {
         height: '100%',
         width: '100%',
+      },
+      container: {
+        flex: 1,
+        alignItems: "center",
+        marginTop: 45,
       },
       headerContainer: {
         alignItems: 'center',
@@ -162,52 +220,72 @@ import { SelectList } from "react-native-dropdown-select-list";
         paddingLeft: 10,
         paddingTop: 10,
       },
-      subHeaderText: {
-        fontFamily: "Poppins-Medium",
-        fontSize: 25,
-        color: '#E74C3C',
-        backgroundColor: 'white',
+      quizzContainer: {
+        marginTop: 20,
+      },
+      sectionContainer: {
+        marginVertical: 5,
+      },
+      sexContainer: {
+        flexDirection: 'row',
+        width: '80%',
+        justifyContent: 'space-around',
+      },
+      mixedContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '80%',
+      },
+      calendarContainer: {
+        width: '100%',
+        alignItems: 'center',
+      },
+      goContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        height: '30%'
+      },
+      calendar: {
+        backgroundColor: '#E74C3C',
+        opacity: 0.9,
+        width: '40%',
       },
     //   BUTTONS
       button: {
         alignItems: "center",
         justifyContent: "center",
         width: '30%',
-        paddingTop: 10,
-        marginTop: 10,
+        height:'37%',
         backgroundColor: "#E74C3C",
         borderRadius: 10,
       },
-      sexContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-      },
-      sexButton: {
+      goButton: {
         alignItems: "center",
         justifyContent: "center",
-        padding: 10,
-        marginTop: 10,
+        width: '30%',
+        height:'40%',
         backgroundColor: "#E74C3C",
-        borderRadius: 100,
+        borderRadius: 10,
       },
       textButton: {
         color: "#ffffff",
-        height: 30,
         fontWeight: "600",
         fontSize: 16,
         fontFamily: "Poppins-Bold",
       },
-      goContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-      },
     //   TEXT
+    subHeaderText: {
+      fontFamily: "Poppins-Medium",
+      fontSize: 25,
+      color: '#E74C3C',
+      backgroundColor: 'white',
+    },
     questionText: {
         fontFamily: "Poppins-Medium",
         fontSize: 20,
         color: 'black',
         backgroundColor: 'white',
-        marginBottom: 15,
+        marginTop: 15,
     },
     textEnd: {
         fontFamily: "Poppins-Light",

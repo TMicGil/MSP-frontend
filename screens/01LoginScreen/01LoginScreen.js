@@ -50,6 +50,7 @@ export default function LoginScreen({ navigation }) {
 					dispatch(signIn({ email: data.email, token: data.token}));
           setSignInMail('');
 					setSignInPassword('');
+          setSignInModal(!signInModal);
           // navigation.navigate('Home');
 				}
 			});
@@ -68,7 +69,7 @@ export default function LoginScreen({ navigation }) {
 					setSignUpMail('');
 					setSignUpPassword('');
           navigation.navigate('Quizz');
-          showSignupModal();
+          setSignUpModal(!signUpModal);
 				}
 			});
   }
