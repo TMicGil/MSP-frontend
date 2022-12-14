@@ -50,13 +50,15 @@ import { useSelector } from "react-redux";
 
     // FUNCTION FOR GO HOMEPAGE
     const handleGo = () => {
-      const body = { token: user.token, sex: isMale, dateOfBirth: dateBirth, sport: sportPractice, level: level, mixedSex: mixed}
+      const body = { token: user.token, sport: sportPractice, level: level, dateOfBirth: dateBirth, sex: isMale, mixedSex: mixed}
+      console.log(body)
       fetch('https://msp-backend.vercel.app/users/update', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       }).then(response => response.json())
       .then(data => {
+        console.log(data)
         if (data.result) {
             navigation.navigate('TabNavigator')
         }
