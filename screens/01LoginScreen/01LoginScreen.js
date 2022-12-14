@@ -38,10 +38,11 @@ export default function LoginScreen({ navigation }) {
   };
 
   const handleSignIn = () => {
+    const body = { email: signInMail, password: signInPassword }
     fetch('https://msp-backend.vercel.app/users/signin', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email: signInMail, password: signInPassword }),
+			body: JSON.stringify(body),
 		}).then(response => response.json())
 			.then(data => {
         console.log(data)
@@ -50,7 +51,7 @@ export default function LoginScreen({ navigation }) {
           setSignInMail('');
 					setSignInPassword('');
           setSignInModal(!signInModal);
-          // navigation.navigate('Home');
+          navigation.navigate('TabNavigator');
 				}
 			});
   }

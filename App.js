@@ -5,8 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // FONTS AND ICONS
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faGear, faHouse, faLocationArrow, faUser } from '@fortawesome/free-solid-svg-icons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 // SCREENS
 import LoginScreen from './screens/01LoginScreen/01LoginScreen';
 import QuizzScreen from './screens/02QuizzScreen/02QuizzScreen';
@@ -39,28 +38,38 @@ const TabNavigator = () => {
         let iconName = '';
 
         if (route.name === 'Map') {
-          iconName = faLocationArrow;
+          iconName = 'location-arrow';
         } else if (route.name === 'Home') {
-          iconName = faHouse;
+          iconName = 'home';
         } else if (route.name === 'Profile') {
-          iconName = faUser;
+          iconName = 'user';
         } else if (route.name === 'Settings') {
-          iconName = faGear;
+          iconName = 'gear';
         }
 
-        return <FontAwesomeIcon name={iconName} size={size} color={color} />;
+        return <FontAwesome name={iconName} size={size} color={color} />;
       },
       tabBarActiveTintColor: '#E74C3C',
       tabBarInactiveTintColor: '#335561',
       headerShown: false,
     })}>
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Home" component={HomeNavigator} />
       <Tab.Screen name="Map" component={MapScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
 };
+
+const HomeNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Event" component={EventScreen} />
+      </Stack.Navigator>
+
+  )
+}
 
 export default function App() {
   const [fontsLoaded] = useFonts({

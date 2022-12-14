@@ -58,7 +58,7 @@ import { useSelector } from "react-redux";
       }).then(response => response.json())
       .then(data => {
         if (data.result) {
-            navigation.navigate('Home')
+            navigation.navigate('TabNavigator')
         }
       });
     }
