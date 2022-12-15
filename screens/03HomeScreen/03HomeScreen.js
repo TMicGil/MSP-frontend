@@ -10,11 +10,12 @@ import {
   } from "react-native";
   import { useEffect, useState } from 'react';
   import { useDispatch, useSelector } from "react-redux";
-  import { userGeoLocation } from "../../reducers/location";
+  import { userGeoLocation } from "../../reducers/user";
   import MapView, { Marker } from "react-native-maps";
   import * as Location from 'expo-location';
   import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
   import { faEnvelope, faStar } from "@fortawesome/free-solid-svg-icons";
+  import { eventGeoLocation } from "../../reducers/location";
 
 
   export default function HomeScreen({navigation}) {
@@ -47,7 +48,9 @@ import {
       .then(response => response.json())
       .then(data => {
         const realData = data.events.map((event) => {
-          return { userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour, latitude: event.latitude, longitude: event.longitude}
+          const eventInformation = { userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour, latitude: event.latitude, longitude: event.longitude}
+          dispatch(eventGeoLocation(eventInformation))
+          return eventInformation
         })
         setEventData(realData)
       }
@@ -58,6 +61,8 @@ import {
       return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.userId[0].firstname} description={data.sport} />
     })
 
+
+// CREATE THE LIST WITH PROPS FROM THE DATABASE
     const eachEventList = eventData.map((data, i) => {
       return <View key={i} style={styles.eventContainer}>
       <View style={styles.starContainer}>
@@ -248,7 +253,7 @@ import {
       eventContainer: {
         flexDirection: 'row',
         alignItems: 'flex-start',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         marginVertical: 5,
         paddingBottom: 3,
         borderBottomWidth: 1,

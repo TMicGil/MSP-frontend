@@ -46,9 +46,8 @@ export default function LoginScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.result) {
-          dispatch(signIn({ email: data.email, token: data.token }));
+          dispatch(signIn({ firstname: data.firstname, email: data.email, token: data.token }));
           setSignInMail("");
           setSignInPassword("");
           setSignInModal(!signInModal);

@@ -1,12 +1,10 @@
 import {
     Image,
     KeyboardAvoidingView,
-    Platform,
     StyleSheet,
     Text,
     View,
     Modal,
-    TextInput,
     TouchableOpacity,
     ImageBackground,
   } from "react-native";
@@ -15,13 +13,16 @@ import {
   import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
   import { faEnvelope, faStar } from "@fortawesome/free-solid-svg-icons";
   import MapView, { Marker } from "react-native-maps";
-  import * as Location from 'expo-location';
 
   export default function MapScreen({navigation}) {
 
     const location = useSelector((state) => state.location.value);
     const user = useSelector((state) => state.user.value)
-    const currentPosition = {latitude: location.latitude, longitude: location.longitude, latitudeDelta: location.latitudeDelta, longitudeDelta: location.longitudeDelta}
+
+    // MAP ON EACH EVENT FROM REDUCER LOCATION AND RETURN A MARKER
+    const eachEvent = location.map((ev, i) => {
+      return <Marker key={i} coordinate={{ latitude: ev.latitude, longitude: ev.longitude }} title={ev.userId[0].firstname} description={ev.sport} />
+    })
 
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
@@ -47,8 +48,9 @@ import {
             </View>
 
             <View style={styles.mapContainer}>
-                <MapView style={styles.map} region={currentPosition}>
-                    {currentPosition && <Marker coordinate={currentPosition} title="Name" description="Sport, Date, Heure" pinColor="#E74C3C" />}
+                <MapView style={styles.map} region={user.location}>
+                    {user.location && <Marker coordinate={user.location} title={user.firstname} description="Your position" pinColor="blue" />}
+                    {eachEvent}
                 </MapView>
             </View>
 
