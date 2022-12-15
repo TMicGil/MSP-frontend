@@ -38,42 +38,54 @@ export default function LoginScreen({ navigation }) {
   };
 
   const handleSignIn = () => {
-    const body = { email: signInMail, password: signInPassword }
-    fetch('https://msp-backend.vercel.app/users/signin', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(body),
-		}).then(response => response.json())
-			.then(data => {
-        console.log(data)
-				if (data.result) {
-					dispatch(signIn({ email: data.email, token: data.token}));
-          setSignInMail('');
-					setSignInPassword('');
+    const body = { email: signInMail, password: signInPassword };
+    fetch("https://msp-backend.vercel.app/users/signin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.result) {
+          dispatch(signIn({ email: data.email, token: data.token }));
+          setSignInMail("");
+          setSignInPassword("");
           setSignInModal(!signInModal);
-          navigation.navigate('TabNavigator');
-				}
-			});
-  }
+          navigation.navigate("TabNavigator");
+        }
+      });
+  };
 
   const handleSignUp = () => {
-      fetch('https://msp-backend.vercel.app/users/signup', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ firstname: signUpFirstname, email: signUpMail, password: signUpPassword }),
-		}).then(response => response.json())
-			.then(data => {
-				if (data.result) {
-					dispatch(signUp({ firstname: signUpFirstname, email: signUpMail, password: signUpPassword, token: data.token}));
-          setSignUpFirstname('');
-					setSignUpMail('');
-					setSignUpPassword('');
-          navigation.navigate('Quizz');
+    fetch("https://msp-backend.vercel.app/users/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        firstname: signUpFirstname,
+        email: signUpMail,
+        password: signUpPassword,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(
+            signUp({
+              firstname: signUpFirstname,
+              email: signUpMail,
+              password: signUpPassword,
+              token: data.token,
+            })
+          );
+          setSignUpFirstname("");
+          setSignUpMail("");
+          setSignUpPassword("");
+          navigation.navigate("Quizz");
           setSignUpModal(!signUpModal);
-				}
-			});
-  }
-
+        }
+      });
+  };
 
   return (
     <View style={styles.container}>
