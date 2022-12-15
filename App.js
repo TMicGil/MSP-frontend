@@ -64,8 +64,10 @@ const TabNavigator = () => {
 const HomeNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="HomeNavigator" component={HomeScreen} />
+          <Stack.Screen name="MessageScreen" component={MessageScreen} />
           <Stack.Screen name="Event" component={EventScreen} />
+          <Stack.Screen name="MyEvent" component={MyEventScreen} />
       </Stack.Navigator>
 
   )
@@ -104,9 +106,6 @@ export default function App() {
           <Stack.Screen name="Home" component={HomeScreen} />
           {/*<Stack.Screen name="Map" component={MapScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
-          <Stack.Screen name="Event" component={EventScreen} />
-          <Stack.Screen name="MyEvent" component={MyEventScreen} />
-          <Stack.Screen name="MessageScreen" component={MessageScreen} />
           <Stack.Screen name="Settings" component={SettingsScreen} />*/}
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
