@@ -10,18 +10,35 @@ import {
     TouchableOpacity,
     ImageBackground,
   } from "react-native";
+  import { SelectList } from "react-native-dropdown-select-list";
+  import { useState } from "react";
 
   export default function EventScreen({navigation}) {
+
+    const data2 = ["Amateur", "Medium", "Semi-Pro", "Pro"];
+    const [sport, setSport] = useState('')
+
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
         <View style={styles.container}>
             
             <View style={styles.headerContainer}>
-                <Text style={styles.text}>Your Event</Text>
+            <Text style={styles.headerText}>My Event</Text>
             </View>
 
             <View style={styles.sectionContainer}>
-                <Text style={styles.textsmall}>Which sport ? -- dropdown</Text>
+                <Text style={styles.questionText}>Which sport ?</Text>
+                    <SelectList
+                      placeholder="Select your Sport"
+                      data={data2}
+                      setSelected={setSport}
+                      search={false}
+                      boxStyles={{ backgroundColor: "white" }}
+                      inputStyles={{ color: "#E74C3C" }}
+                      dropdownStyles={{ backgroundColor: "white" }}
+                      dropdownTextStyles={{ fontSize: 16 }}
+                      maxHeight={150}
+                    />
             </View>
 
             <View style={styles.sectionContainer}>
@@ -65,10 +82,20 @@ import {
         justifyContent: "flex-start",
         marginTop: 45,
       },
+      // HEADER
       headerContainer: {
         width: '100%',
         height: '10%',
-        backgroundColor: 'orange',
+        paddingLeft: 10,
+      },
+      headerText: {
+        fontSize: 45,
+        fontWeight: "700",
+        color: "white",
+        fontFamily: "Poppins-Bold",
+        textShadowColor: "black",
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 20,
       },
     sectionContainer: {
         width: '100%',
@@ -77,6 +104,7 @@ import {
         backgroundColor: 'lightgrey',
         marginBottom: 4,
     },
+    // FIRST QUESTION
       descriptionContainer: {
         width: '100%',
         height: '23%',
@@ -90,6 +118,13 @@ import {
         backgroundColor: 'lightcoral',
       },
     //   TEXT
+    questionText: {
+      fontFamily: "Poppins-Medium",
+      fontSize: 20,
+      color: "black",
+      backgroundColor: "white",
+      marginTop: 15,
+    },
     text: {
         fontSize: 40
     },
