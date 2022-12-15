@@ -10,23 +10,47 @@ import {
     TouchableOpacity,
     ImageBackground,
   } from "react-native";
+  import { useEffect, useState } from 'react';
+  import { useSelector } from "react-redux";
+  import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+  import { faEnvelope, faStar } from "@fortawesome/free-solid-svg-icons";
+  import MapView, { Marker } from "react-native-maps";
+  import * as Location from 'expo-location';
 
   export default function MapScreen({navigation}) {
+
+    const location = useSelector((state) => state.location.value);
+    const user = useSelector((state) => state.user.value)
+    const currentPosition = {latitude: location.latitude, longitude: location.longitude, latitudeDelta: location.latitudeDelta, longitudeDelta: location.longitudeDelta}
+
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
         <View style={styles.container}>
             
             <View style={styles.headerContainer}>
-                <Text style={styles.text}>Header</Text>
+              <View style={styles.userInfoContainer}>
+                    <View style={styles.image}></View>
+                    <View style={styles.userInfo}>
+                      <Text style={styles.textsmallname}>{user.firstname}</Text>
+                      <Text style={styles.textsmallname}>City</Text>
+                    </View>
+                </View>
+
+                <View style={styles.messageContainer}>
+                  <TouchableOpacity onPress={() => navigation.navigate('MessageScreen')}>
+                    <FontAwesomeIcon
+                      icon={faEnvelope}
+                      size={35}
+                    />
+                  </TouchableOpacity>
+                </View>
             </View>
 
             <View style={styles.mapContainer}>
-                <Text style={styles.text}>Map</Text>
+                <MapView style={styles.map} region={currentPosition}>
+                    {currentPosition && <Marker coordinate={currentPosition} title="Name" description="Sport, Date, Heure" pinColor="#E74C3C" />}
+                </MapView>
             </View>
-
-
-
-
 
         </View>
         </ImageBackground>
@@ -46,14 +70,50 @@ import {
       headerContainer: {
         width: '100%',
         height: '10%',
-        backgroundColor: 'orange',
         marginTop: 45,
+        paddingHorizontal: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
       },
+      userInfoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 5,
+        height: '80%',
+    },
+    image: {
+      width: '35%',
+      height: '100%',
+      borderRadius: '50%',
+      marginRight: 8,
+      backgroundColor: 'orange'
+  },
+  userInfo: {
+    flexDirection: 'column',
+  },
+  textsmallname: {
+    backgroundColor: 'white',
+    fontSize: 20,
+    marginBottom: 4,
+    fontFamily: 'Poppins-Regular',
+    color: '#E74C3C'
+},
+messageContainer: {
+  backgroundColor: 'white',
+  height: '70%',
+  width: '18%',
+  borderRadius: '50%',
+  alignItems: 'center',
+  justifyContent: 'center',
+},
       mapContainer: {
         width: '100%',
-        height: '100%',
-        backgroundColor: 'yellow'
-
+        height: '90%',
+      },
+      map: {
+        flex: 1,
+        borderRadius: 10,
       },
     //   TEXT
     text: {

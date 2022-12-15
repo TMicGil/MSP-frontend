@@ -10,41 +10,125 @@ import {
     TouchableOpacity,
     ImageBackground,
   } from "react-native";
+  import { useEffect, useState } from 'react';
+  import { useDispatch, useSelector } from "react-redux";
+  import { userGeoLocation } from "../../reducers/location";
+  import MapView, { Marker } from "react-native-maps";
+  import * as Location from 'expo-location';
+  import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+  import { faEnvelope, faStar } from "@fortawesome/free-solid-svg-icons";
+
 
   export default function HomeScreen({navigation}) {
+
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.value);
+
+    const [currentPosition, setCurrentPosition] = useState(null);
+    const [searchFilter, setSearchFilter] = useState('');
+
+    useEffect(() => {
+      (async () => {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+  
+        if (status === 'granted') {
+          Location.watchPositionAsync({ distanceInterval: 10 },
+            (location) => {
+              const position = {latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.03, longitudeDelta: 0.007}
+              setCurrentPosition(position);
+              dispatch(userGeoLocation({latitude: position.latitude, longitude: position.longitude, latitudeDelta: 0.03, longitudeDelta: 0.007}))
+
+              console.log(position);
+            });
+        }
+      })();
+    }, []);
+
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
         <View style={styles.container}>
-            
+            {/* HEADER ------ */}
             <View style={styles.headerContainer}>
-                <Text style={styles.text}>Header</Text>
-                <TouchableOpacity style={styles.messageBtn} onPress={() => navigation.navigate('MessageScreen')}>
-                    <Text style={styles.textsmall}>MESSAGES</Text>
-                </TouchableOpacity>
-            </View>
+                <View style={styles.userInfoContainer}>
+                    <View style={styles.image}></View>
+                    <View style={styles.userInfo}>
+                      <Text style={styles.textsmallname}>{user.firstname}</Text>
+                      <Text style={styles.textsmallname}>City</Text>
+                    </View>
+                </View>
 
+                <View style={styles.messageContainer}>
+                  <TouchableOpacity onPress={() => navigation.navigate('MessageScreen')}>
+                    <FontAwesomeIcon
+                      icon={faEnvelope}
+                      size={35}
+                    />
+                  </TouchableOpacity>
+                </View>
+            </View>
+            {/* MAP ------- */}
             <View style={styles.mapContainer}>
-                <Text style={styles.text}>Map</Text>
+                <MapView style={styles.map} region={currentPosition}>
+                    {currentPosition && <Marker coordinate={currentPosition} title="Name" description="Sport, Date, Heure" pinColor="#E74C3C" />}
+                </MapView>
             </View>
-
+            {/* TODAY IN NICE */}
             <View style={styles.todayContainer}>
-                <Text style={styles.textsmall}>Today in Nice</Text>
+                <Text style={styles.todayText}>Today in Nice :</Text>
             </View>
-
+            {/* SEARCH BAR  */}
             <View style={styles.searchContainer}>
-                <Text style={styles.textsmall}>Search a sport</Text>
+                <TextInput
+                style={styles.inputs}
+                placeholder="🔍 Search activity by sport or level"
+                placeholderTextColor="#ccd1e8"
+                onChangeText={(value) => {
+                  setSearchFilter(value);
+                }}
+                value={searchFilter}/>
             </View>
-
+            {/* LIST OF EVENTS */}
             <View style={styles.listEventContainer}>
-                <Text style={styles.text}>List of events</Text>
-                <TouchableOpacity style={styles.joinBtn} onPress={() => navigation.navigate('Event')}>
-                    <Text style={styles.textsmall}>JOIN</Text>
-                </TouchableOpacity>
-            </View>
 
+                <View style={styles.eventContainer}>
+                  <View style={styles.starContainer}>
+                      <FontAwesomeIcon
+                      icon={faStar}
+                      size={22}
+                        />
+                  </View>
+                  <Text style={styles.eventListInfo}>Name</Text>
+                  <Text style={styles.eventListInfo}>Sport</Text>
+                  <Text style={styles.eventListInfo}>Heure</Text>
+
+                    <TouchableOpacity style={styles.joinBtn} onPress={() => navigation.navigate('Event')}>
+                      <Text style={styles.joinText}>LOOK</Text>
+                    </TouchableOpacity>
+
+                </View>
+
+                <View style={styles.eventContainer}>
+                  <View style={styles.starContainer}>
+                      <FontAwesomeIcon
+                      icon={faStar}
+                      size={22}
+                        />
+                  </View>
+                  <Text style={styles.eventListInfo}>Name</Text>
+                  <Text style={styles.eventListInfo}>Sport</Text>
+                  <Text style={styles.eventListInfo}>Heure</Text>
+
+                    <TouchableOpacity style={styles.joinBtn} onPress={() => navigation.navigate('Event')}>
+                      <Text style={styles.joinText}>LOOK</Text>
+                    </TouchableOpacity>
+
+                </View>
+
+            </View>
+            {/* PROPOSE ACTIVITY */}
             <View style={styles.proposeContainer}>
                 <TouchableOpacity style={styles.proposeBtn} onPress={() => navigation.navigate('MyEvent')}>
-                    <Text style={styles.textsmall}>PROPOSE AN EVENT</Text>
+                    <Text style={styles.proposeText}>PROPOSE AN ACTIVITY</Text>
                 </TouchableOpacity>
             </View>
 
@@ -67,57 +151,156 @@ import {
         alignItems: "center",
         justifyContent: "flex-start",
       },
+      // HEADER ------------
       headerContainer: {
         width: '100%',
         height: '10%',
-        backgroundColor: 'orange',
         marginTop: 45,
+        paddingHorizontal: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
       },
-      profileImg: {
-      },
-      mapContainer: {
-        width: '100%',
-        height: '30%',
-        backgroundColor: 'yellow'
-      },
-      todayContainer: {
-        width: '100%',
-        height: '4%',
-        backgroundColor: 'red',
-      },
-      searchContainer: {
-        width: '100%',
-        height: '7%',
-        backgroundColor: 'lightgrey',
-      },
-      listEventContainer: {
-        width: '100%',
-        height: '27%',
-        backgroundColor: 'skyblue',
-      },
-      proposeContainer: {
-        width: '80%',
-        height: '10%',
-        backgroundColor: 'pink',
+      userInfoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 5,
+        height: '80%',
+    },
+    image: {
+      width: '35%',
+      height: '100%',
+      borderRadius: '50%',
+      marginRight: 8,
+      backgroundColor: 'orange'
+  },
+  userInfo: {
+    flexDirection: 'column',
+  },
+  textsmallname: {
+    backgroundColor: 'white',
+    fontSize: 20,
+    marginBottom: 4,
+    fontFamily: 'Poppins-Regular',
+    color: '#E74C3C'
+},
+      messageContainer: {
+        backgroundColor: 'white',
+        height: '70%',
+        width: '18%',
+        borderRadius: '50%',
         alignItems: 'center',
         justifyContent: 'center',
       },
+      // MAP --------- 
+      mapContainer: {
+        width: '97%',
+        height: '35%',
+        borderWidth: 2,
+        borderColor: '#E74C3C',
+        borderRadius: 10,
+      },
+      map: {
+        flex: 1,
+        borderRadius: 10,
+      },
+      // TODAY -------
+      todayContainer: {
+        width: '97%',
+        height: '4%',
+        marginVertical: 5,
+      },
+      todayText: {
+        fontFamily: 'Poppins-Medium',
+        fontSize: 23,    
+        textShadowColor: "white",
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 20,
+      },
+      // SEARCH -------
+      searchContainer: {
+        width: '97%',
+        height: '7%',
+        justifyContent: 'center',
+      },
+      inputs: {
+        width: "80%",
+        height: "10%",
+        borderColor: "grey",
+        borderWidth: 2,
+        borderRadius: 10,
+        fontSize: 16,
+        height: '80%',
+        backgroundColor: 'white',
+        paddingLeft: 10,
+      },
+      // LIST OF EVENTS -------
+      listEventContainer: {
+        width: '97%',
+        padding: 5,
+        height: '27%',
+        backgroundColor: 'white',
+        borderRadius: 20,
+      },
+      eventContainer: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-around',
+        marginVertical: 5,
+        paddingBottom: 3,
+        borderBottomWidth: 1,
+        borderBottomColor: '#E74C3C',
+
+      },
+      eventListInfo: {
+        fontSize: 20,
+        fontFamily: 'Poppins-Regular',
+      },
+      starContainer: {
+        backgroundColor: 'white',
+        borderRadius: '50%',
+        height: '100%',
+        width: '8%',
+        alignItems: 'center',
+
+      },
+      joinBtn: {
+        backgroundColor: '#E74C3C',
+        height: '100%',
+        width: '20%',
+        borderRadius: 20,
+        alignItems: 'center',
+      },
+      joinText: {
+        color: "#ffffff",
+        fontWeight: "600",
+        fontSize: 20,
+        fontFamily: "Poppins-Medium",
+      },
+      // PROPOSE ACTIVITY
+      proposeContainer: {
+        width: '80%',
+        height: '10%',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      proposeBtn: {
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "70%",
+        backgroundColor: "#E74C3C",
+        borderRadius: 20,
+      },
+      proposeText: {
+        color: "#ffffff",
+        fontWeight: "600",
+        fontSize: 25,
+        fontFamily: "Poppins-Light",
+      },
     // BUTTON
-    joinBtn: {
-      backgroundColor: 'orange',
-      height: '20%',
-      width: '30%',
-    },
-    proposeBtn: {
-      backgroundColor: 'orange',
-      height: '50%',
-      width: '100%',
-    },
-    messageBtn: {
-      backgroundColor: 'pink',
-      height: '50%',
-      width: '50%',
-    },
+
+
     //   TEXT
     text: {
         fontSize: 40

@@ -22,9 +22,10 @@ import { Text } from 'react-native';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import user from './reducers/user';
+import location from './reducers/location';
 
 const store = configureStore({
-  reducer: { user },
+  reducer: { user, location },
 });
 
 SplashScreen.preventAutoHideAsync();
@@ -104,9 +105,9 @@ export default function App() {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Quizz" component={QuizzScreen} /> 
           <Stack.Screen name="Home" component={HomeScreen} />
-          {/*<Stack.Screen name="Map" component={MapScreen} />
+          <Stack.Screen name="Map" component={MapScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
-          <Stack.Screen name="Settings" component={SettingsScreen} />*/}
+          <Stack.Screen name="Settings" component={SettingsScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
