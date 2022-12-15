@@ -1,11 +1,9 @@
 import {
     Image,
     KeyboardAvoidingView,
-    Platform,
     StyleSheet,
     Text,
     View,
-    Modal,
     TextInput,
     TouchableOpacity,
     ImageBackground,
@@ -26,6 +24,7 @@ import {
 
     const [currentPosition, setCurrentPosition] = useState(null);
     const [searchFilter, setSearchFilter] = useState('');
+    const [eventData, setEventData] = useState([])
 
     useEffect(() => {
       (async () => {
@@ -37,12 +36,46 @@ import {
               const position = {latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.03, longitudeDelta: 0.007}
               setCurrentPosition(position);
               dispatch(userGeoLocation({latitude: position.latitude, longitude: position.longitude, latitudeDelta: 0.03, longitudeDelta: 0.007}))
-
-              console.log(position);
             });
         }
       })();
     }, []);
+
+// GET ALL EVENTS FROM DATABASE
+    useEffect(() =>{
+      fetch("https://msp-backend.vercel.app/events/all")
+      .then(response => response.json())
+      .then(data => {
+        const realData = data.events.map((event) => {
+          return { userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour, latitude: event.latitude, longitude: event.longitude}
+        })
+        setEventData(realData)
+      }
+      )
+    }, []);
+// CREATE THE MARKERS WITH PROPS FROM THE DATABASE
+    const eachEvent = eventData.map((data, i) => {
+      return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.userId[0].firstname} description={data.sport} />
+    })
+
+    const eachEventList = eventData.map((data, i) => {
+      return <View key={i} style={styles.eventContainer}>
+      <View style={styles.starContainer}>
+          <FontAwesomeIcon
+          icon={faStar}
+          size={22}
+            />
+      </View>
+      <Text style={styles.eventListInfo}>{data.userId[0].firstname}</Text>
+      <Text style={styles.eventListInfo}>{data.sport}</Text>
+      <Text style={styles.eventListInfo}>{data.hour}</Text>
+
+        <TouchableOpacity style={styles.joinBtn} onPress={() => navigation.navigate('Event')}>
+          <Text style={styles.joinText}>LOOK</Text>
+        </TouchableOpacity>
+
+    </View>
+    })
 
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
@@ -69,7 +102,8 @@ import {
             {/* MAP ------- */}
             <View style={styles.mapContainer}>
                 <MapView style={styles.map} region={currentPosition}>
-                    {currentPosition && <Marker coordinate={currentPosition} title="Name" description="Sport, Date, Heure" pinColor="#E74C3C" />}
+                    {currentPosition && <Marker coordinate={currentPosition} title={user.firstname} description="Your position" pinColor="blue" />}
+                    {eachEvent}
                 </MapView>
             </View>
             {/* TODAY IN NICE */}
@@ -90,39 +124,8 @@ import {
             {/* LIST OF EVENTS */}
             <View style={styles.listEventContainer}>
 
-                <View style={styles.eventContainer}>
-                  <View style={styles.starContainer}>
-                      <FontAwesomeIcon
-                      icon={faStar}
-                      size={22}
-                        />
-                  </View>
-                  <Text style={styles.eventListInfo}>Name</Text>
-                  <Text style={styles.eventListInfo}>Sport</Text>
-                  <Text style={styles.eventListInfo}>Heure</Text>
+              {eachEventList}
 
-                    <TouchableOpacity style={styles.joinBtn} onPress={() => navigation.navigate('Event')}>
-                      <Text style={styles.joinText}>LOOK</Text>
-                    </TouchableOpacity>
-
-                </View>
-
-                <View style={styles.eventContainer}>
-                  <View style={styles.starContainer}>
-                      <FontAwesomeIcon
-                      icon={faStar}
-                      size={22}
-                        />
-                  </View>
-                  <Text style={styles.eventListInfo}>Name</Text>
-                  <Text style={styles.eventListInfo}>Sport</Text>
-                  <Text style={styles.eventListInfo}>Heure</Text>
-
-                    <TouchableOpacity style={styles.joinBtn} onPress={() => navigation.navigate('Event')}>
-                      <Text style={styles.joinText}>LOOK</Text>
-                    </TouchableOpacity>
-
-                </View>
 
             </View>
             {/* PROPOSE ACTIVITY */}

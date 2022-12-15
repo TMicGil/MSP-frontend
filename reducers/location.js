@@ -13,9 +13,15 @@ export const locationSlice = createSlice({
         state.value.longitude = action.payload.longitude;
         state.value.latitudeDelta = action.payload.latitudeDelta;
         state.value.longitudeDelta = action.payload.longitudeDelta;
+    },
+    eventGeoLocation: (state, action) => {
+      state.value.latitude = action.payload.latitude;
+      state.value.longitude = action.payload.longitude;
+      state.value.latitudeDelta = action.payload.latitudeDelta;
+      state.value.longitudeDelta = action.payload.longitudeDelta;
     }
   },
 });
 
-export const { userGeoLocation } = locationSlice.actions;
+export const { userGeoLocation, eventGeoLocation } = locationSlice.actions;
 export default locationSlice.reducer;
