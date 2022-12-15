@@ -18,6 +18,9 @@ import {
             
             <View style={styles.headerContainer}>
                 <Text style={styles.text}>Header</Text>
+                <TouchableOpacity style={styles.messageBtn} onPress={() => navigation.navigate('MessageScreen')}>
+                    <Text style={styles.textsmall}>MESSAGES</Text>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.mapContainer}>
@@ -36,6 +39,12 @@ import {
                 <Text style={styles.text}>List of events</Text>
                 <TouchableOpacity style={styles.joinBtn} onPress={() => navigation.navigate('Event')}>
                     <Text style={styles.textsmall}>JOIN</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View style={styles.proposeContainer}>
+                <TouchableOpacity style={styles.proposeBtn} onPress={() => navigation.navigate('MyEvent')}>
+                    <Text style={styles.textsmall}>PROPOSE AN EVENT</Text>
                 </TouchableOpacity>
             </View>
 
@@ -86,11 +95,28 @@ import {
         height: '27%',
         backgroundColor: 'skyblue',
       },
+      proposeContainer: {
+        width: '80%',
+        height: '10%',
+        backgroundColor: 'pink',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
     // BUTTON
     joinBtn: {
       backgroundColor: 'orange',
       height: '20%',
       width: '30%',
+    },
+    proposeBtn: {
+      backgroundColor: 'orange',
+      height: '50%',
+      width: '100%',
+    },
+    messageBtn: {
+      backgroundColor: 'pink',
+      height: '50%',
+      width: '50%',
     },
     //   TEXT
     text: {
