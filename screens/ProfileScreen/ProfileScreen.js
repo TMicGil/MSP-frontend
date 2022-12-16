@@ -10,6 +10,7 @@ import {
     TouchableOpacity,
     ImageBackground,
     Keyboard,
+    Alert,
   } from "react-native";
   import { useSelector } from "react-redux";
   import { useState, useEffect } from "react";
@@ -20,7 +21,7 @@ import {
 
     const [hasPermission, setHasPermission] = useState(false);
     const [userDescription, setUserDescription] = useState('');
-    const [userDescriptionText, setUserDescriptionText] = useState('');
+    const [userLevel, setUserLevel] = useState('');
     const [descriptionModal, setDescriptionModal] = useState(false);
     const [userSports, setUserSports] = useState([]);
     const [userDateBirth, setUserDateBirth] = useState(0);
@@ -36,6 +37,7 @@ import {
           setUserSports(data.user.sport);
           setUserDateBirth(data.user.dateOfBirth);
           setUserDescription(data.user.description);
+          setUserLevel(data.user.level)
 
         }
         setHasPermission(true);
@@ -75,15 +77,17 @@ import {
         token: user.token,
         description: userDescription,
       };
-      console.log('body :', body);
       fetch('https://msp-backend.vercel.app/users/description', {
         method: 'PUT',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       }).then((response) => response.json())
       .then((data) => {
-        console.log(data)
+        if (data.result) {
+          Alert.alert("Confirmation :", "Your description has been modified :)", {cancelable: true})
+        }
       });
+      setDescriptionModal(!descriptionModal);
     }
 
     return (
@@ -135,6 +139,7 @@ import {
                       <Text style={styles.textsmallname}>{user.firstname}</Text>
                       <Text style={styles.textsmallname}>City</Text>
                       <Text style={styles.textsmallname}>{getAge(userDateBirth)} years old</Text>
+                      <Text style={styles.textsmallname}>{userLevel}</Text>
                     </View>
                 </View>
             </View>
