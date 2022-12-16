@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import DiscoverBtn from "./DiscoverBtn";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
+import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -29,6 +30,11 @@ export default function LoginScreen({ navigation }) {
   const [signInMail, setSignInMail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
 
+  const [signinEmailError, setsigninEmailError] = useState(false);
+  const [signupEmailError, setsignupEmailError] = useState(false);
+
+  const [signinPasswordVisible, setSigninPasswordVisible] = useState(false);
+
   const showSigninModal = () => {
     setSignInModal(!signInModal);
   };
@@ -37,54 +43,71 @@ export default function LoginScreen({ navigation }) {
     setSignUpModal(!signUpModal);
   };
 
+  const EMAIL_REGEX = RegExp(
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  );
+
   const handleSignIn = () => {
     const body = { email: signInMail, password: signInPassword };
-    fetch("https://msp-backend.vercel.app/users/signin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('sign in :', data);
-        if (data.result) {
-          dispatch(signIn({ firstname: data.firstname, email: signInMail, token: data.token }));
-          setSignInMail("");
-          setSignInPassword("");
-          setSignInModal(!signInModal);
-          navigation.navigate("TabNavigator");
-        }
-      });
+    if (EMAIL_REGEX.test(signInMail)) {
+      fetch("https://msp-backend.vercel.app/users/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            dispatch(
+              signIn({
+                firstname: data.firstname,
+                email: data.email,
+                token: data.token,
+              })
+            );
+            setSignInMail("");
+            setSignInPassword("");
+            setSignInModal(!signInModal);
+            navigation.navigate("TabNavigator");
+          }
+        });
+    } else {
+      setsigninEmailError(true);
+    }
   };
 
   const handleSignUp = () => {
-    fetch("https://msp-backend.vercel.app/users/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        firstname: signUpFirstname,
-        email: signUpMail,
-        password: signUpPassword,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          dispatch(
-            signUp({
-              firstname: signUpFirstname,
-              email: signUpMail,
-              password: signUpPassword,
-              token: data.token,
-            })
-          );
-          setSignUpFirstname("");
-          setSignUpMail("");
-          setSignUpPassword("");
-          navigation.navigate("Quizz");
-          setSignUpModal(!signUpModal);
-        }
-      });
+    if (EMAIL_REGEX.test(signUpMail)) {
+      fetch("https://msp-backend.vercel.app/users/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstname: signUpFirstname,
+          email: signUpMail,
+          password: signUpPassword,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            dispatch(
+              signUp({
+                firstname: signUpFirstname,
+                email: signUpMail,
+                password: signUpPassword,
+                token: data.token,
+              })
+            );
+            setSignUpFirstname("");
+            setSignUpMail("");
+            setSignUpPassword("");
+            navigation.navigate("Quizz");
+            setSignUpModal(!signUpModal);
+          }
+        });
+    } else {
+      setsignupEmailError(true);
+    }
   };
 
   return (
@@ -106,6 +129,10 @@ export default function LoginScreen({ navigation }) {
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Email</Text>
                 <TextInput
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                  autoComplete="email"
                   style={styles.inputs}
                   placeholderTextColor="#ccd1e8"
                   onChangeText={(value) => {
@@ -114,8 +141,11 @@ export default function LoginScreen({ navigation }) {
                   value={signInMail}
                   placeholder="Enter your email"
                 />
+
                 <Text style={styles.inputLabel}>Password</Text>
+
                 <TextInput
+                  secureTextEntry={true}
                   style={styles.inputs}
                   placeholderTextColor="#ccd1e8"
                   onChangeText={(value) => {
@@ -124,6 +154,7 @@ export default function LoginScreen({ navigation }) {
                   value={signInPassword}
                   placeholder="Enter your password"
                 />
+
                 <TouchableOpacity
                   onPress={() => handleSignIn()}
                   style={styles.button}
@@ -131,6 +162,9 @@ export default function LoginScreen({ navigation }) {
                 >
                   <Text style={styles.textButton}>Sign in</Text>
                 </TouchableOpacity>
+                {signinEmailError && (
+                  <Text style={styles.error}>Invalid email address</Text>
+                )}
               </View>
             </View>
           </View>
@@ -163,6 +197,10 @@ export default function LoginScreen({ navigation }) {
                 />
                 <Text style={styles.inputLabel}>Email</Text>
                 <TextInput
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                  autoComplete="email"
                   style={styles.inputs}
                   placeholderTextColor="#ccd1e8"
                   onChangeText={(value) => {
@@ -173,6 +211,7 @@ export default function LoginScreen({ navigation }) {
                 />
                 <Text style={styles.inputLabel}>Password</Text>
                 <TextInput
+                  secureTextEntry={true}
                   style={styles.inputs}
                   placeholderTextColor="#ccd1e8"
                   onChangeText={(value) => {
@@ -188,6 +227,9 @@ export default function LoginScreen({ navigation }) {
                 >
                   <Text style={styles.textButton}>Sign Up</Text>
                 </TouchableOpacity>
+                {signupEmailError && (
+                  <Text style={styles.error}>Invalid email address</Text>
+                )}
               </View>
             </View>
           </View>
@@ -376,5 +418,9 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row-reverse",
     justifyContent: "space-around",
+  },
+  error: {
+    marginTop: 10,
+    color: "#E74C3C",
   },
 });
