@@ -12,6 +12,8 @@ import {
   import { SelectList } from "react-native-dropdown-select-list";
   import DatePicker from "@react-native-community/datetimepicker";
   import { useState } from "react";
+  import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
   export default function EventScreen({navigation}) {
 
@@ -21,6 +23,10 @@ import {
     const [hourEvent, setHourEvent] = useState(new Date());
     const [searchAddress, setSearchAddress] = useState('');
     const [eventDescription, setEventDescription] = useState('')
+
+    const handlePrevious = () => {
+      navigation.navigate("HomeNavigator")
+    }
 
     const dateEventSelected = (event, value) => {
       setDateEvent(value)
@@ -32,9 +38,12 @@ import {
 
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
-        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "position" : "height"}>
             
             <View style={styles.headerContainer}>
+            <TouchableOpacity onPress={() => handlePrevious()}>
+              <FontAwesomeIcon icon={faArrowLeftLong} size={36} style={{color: '#E74C3C'}}/>
+            </TouchableOpacity>
             <Text style={styles.headerText}>My Event</Text>
             </View>
 {/* WHICH SPORT ? */}
@@ -83,12 +92,12 @@ import {
 
 {/* ADDRESS SELECTION */}
             
-            <View style={styles.descriptionContainer}>
+            <View style={styles.addressContainer}>
                 <Text style={styles.questionText}>Where ?</Text>
                 <TextInput
                 onSubmit={Keyboard.dismiss}
                 style={styles.addressInput}
-                placeholder="Enter an address"
+                placeholder="🔍 Enter an address"
                 placeholderTextColor="#ccd1e8"
                 onChangeText={(value) => {setSearchAddress(value);}}/>
             </View>
@@ -133,7 +142,7 @@ import {
       },
     container: {
         flex: 1,
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "flex-start",
         marginTop: 45,
       },
@@ -142,10 +151,11 @@ import {
         width: '100%',
         height: '10%',
         paddingLeft: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
       },
     sectionContainer: {
         width: '100%',
-        borderWidth: 2,
         marginBottom: 4,
         flexDirection: 'row',
         alignItems: 'center',
@@ -153,43 +163,50 @@ import {
         marginVertical: 10,
         paddingHorizontal: 20,
     },
-      descriptionContainer: {
+    addressContainer: {
+      width: '100%',
+      height: '15%',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      paddingHorizontal: 20,
+    },
+    descriptionContainer: {
         width: '100%',
-        height: '23%',
+        height: '32%',
         flexDirection: 'column',
-        borderWidth: 2,
         paddingHorizontal: 20,
+        alignItems: 'center',
       },
-      buttonContainer: {
+    buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         width: '100%',
-        height: '17%',
-        borderWidth: 2,
+        height: '15%',
       },
-      calendar: {
+    calendar: {
         backgroundColor: "white",
         opacity: 0.9,
       },
-      hour: {
+    hour: {
         backgroundColor: "white",
         opacity: 0.9,
       },
-      addressInput: {
-        width: "90%",
+    addressInput: {
+        width: 320,
         height: '35%',
         borderColor: "#E74C3C",
-        borderWidth: 2,
+        borderWidth: 1,
         borderRadius: 10,
         fontSize: 16,
         backgroundColor: 'white',
         paddingLeft: 10,
+        marginTop: 5,
       },
-      descriptionInput: {
-        width: "90%",
-        height: "35%",
+    descriptionInput: {
+        width: 320,
+        height: "50%",
         borderColor: "#E74C3C",
-        borderWidth: 2,
+        borderWidth: 1,
         borderRadius: 10,
         fontSize: 16,
         backgroundColor: 'white',
@@ -199,13 +216,14 @@ import {
         alignItems: "center",
         justifyContent: "center",
         width: "30%",
-        height: "40%",
+        height: "70%",
         backgroundColor: "#E74C3C",
         borderRadius: 10,
       },
     //   TEXT
     headerText: {
       fontSize: 45,
+      marginLeft: 40,
       fontWeight: "700",
       color: "white",
       fontFamily: "Poppins-Bold",
