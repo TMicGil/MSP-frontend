@@ -25,8 +25,8 @@ import user from './reducers/user';
 import location from './reducers/location';
 
 const store = configureStore({
-  reducer: { user, location },
-});
+  reducer: {user, location}
+})
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -94,10 +94,11 @@ export default function App() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
-    return <Text>hello</Text>;
+    return <Text>Our fonts are not installed in your device... Bye bye !</Text>;
   }
 
   return (
+    
     <Provider store={store}>
     <SafeAreaProvider onLayout={onLayoutRootView}>
        <NavigationContainer> 

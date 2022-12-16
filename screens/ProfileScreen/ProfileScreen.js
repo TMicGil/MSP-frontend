@@ -9,16 +9,124 @@ import {
     TextInput,
     TouchableOpacity,
     ImageBackground,
+    Keyboard,
   } from "react-native";
   import { useSelector } from "react-redux";
+  import { useState, useEffect } from "react";
 
   export default function ProfileScreen({navigation}) {
 
     const user = useSelector((state) => state.user.value);
 
+    const [hasPermission, setHasPermission] = useState(false);
+    const [userDescription, setUserDescription] = useState('');
+    const [userDescriptionText, setUserDescriptionText] = useState('');
+    const [descriptionModal, setDescriptionModal] = useState(false);
+    const [userSports, setUserSports] = useState([]);
+    const [userDateBirth, setUserDateBirth] = useState(0);
+
+
+    // GET USER INFO FROM DATABASE
+    useEffect(() =>{
+      fetch(`https://msp-backend.vercel.app/users/${user.token}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log('user info for profile screen:', data)
+        if (data.result) {
+          setUserSports(data.user.sport);
+          setUserDateBirth(data.user.dateOfBirth);
+          setUserDescription(data.user.description);
+
+        }
+        setHasPermission(true);
+      }
+      )
+    }, []);
+
+    if (!hasPermission) {
+      return <View><Text>Loading...</Text></View>
+    } 
+
+    // MAP TO GET AND DISPLAY ALL THE SPORT SELECTED IN THE DB
+    const eachUserSport = userSports.map((sport, i)=> {
+      return <Text key={i} style={styles.eachTextSport}>{sport}</Text>
+    })
+
+    // GET THE USER's AGE FOR HEADER
+    const getAge = (stringDate) => {
+      const today = new Date();
+      const birthDate = new Date (stringDate);
+      const yearsDifference = today.getFullYear() - birthDate.getFullYear();
+      if (today.getMonth() < birthDate.getMonth() || 
+      (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
+        return yearsDifference - 1
+      }
+      return yearsDifference;
+    };
+
+// MODAL FOR MODIFY THE DESCRIPTION
+    const showDescriptionModal = () => {
+      setDescriptionModal(!descriptionModal)
+    }
+
+    // SEND THE USER DESCRIPTION TO DB 
+    const sendDescription = () => {
+      const body = {
+        token: user.token,
+        description: userDescription,
+      };
+      console.log('body :', body);
+      fetch('https://msp-backend.vercel.app/users/description', {
+        method: 'PUT',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }).then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+      });
+    }
+
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
         <View style={styles.container}>
+          {/* MODAL FOR USER DESCRIPTION */}
+          <Modal visible={descriptionModal} animationType="fade" transparent>
+            <KeyboardAvoidingView style={{flex:1, justifyContent: 'flex-end'}}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+
+                  <Text style={styles.textTitleSml}>Enter here your new description :</Text>
+
+                  <TextInput
+                  onChangeText={(value) => {setUserDescription(value)}}
+                  value={userDescription}
+                  placeholder="Enter a new description about yourself"
+                  placeholderTextColor="#ccd1e8"
+                  style={styles.descriptionInput}
+                  multiline={true}
+                  />
+
+                  <View style={styles.modalBtnContainer}>
+                  <TouchableOpacity 
+                  style={styles.modalBtn}
+                  onPress={() => showDescriptionModal()}>
+                    <Text style={styles.modalTextBtn}>CANCEL</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                  style={styles.modalBtn}
+                  onPress={() => sendDescription()}>
+                    <Text style={styles.modalTextBtn}>CONFIRM</Text>
+                  </TouchableOpacity>
+                  </View>
+
+                </View>
+
+              </View>
+
+            </KeyboardAvoidingView>
+
+          </Modal>
 {/* HEADER */}
             <View style={styles.headerContainer}>
               <View style={styles.userInfoContainer}>
@@ -26,7 +134,7 @@ import {
                     <View style={styles.userInfo}>
                       <Text style={styles.textsmallname}>{user.firstname}</Text>
                       <Text style={styles.textsmallname}>City</Text>
-                      <Text style={styles.textsmallname}>Age</Text>
+                      <Text style={styles.textsmallname}>{getAge(userDateBirth)} years old</Text>
                     </View>
                 </View>
             </View>
@@ -36,19 +144,27 @@ import {
             </View>
 {/* DESCRIPTION */}
             <View style={styles.descriptionContainer}>
-                <Text style={styles.text}>Description</Text>
+                <Text style={styles.descriptionText}>{userDescription}</Text>
+                <TouchableOpacity 
+                style={styles.modifyBtn}
+                onPress={() => showDescriptionModal()}>
+                  <Text style={styles.textButton}>Modify</Text>
+                </TouchableOpacity>
             </View>
 {/* MY SPORTS */}
             <View style={styles.sportContainer}>
-                <Text style={styles.textsmall}>Sports</Text>
+                <Text style={styles.textTitle}>Sports :</Text>
+                <View style={styles.mySports}>
+                    {eachUserSport}
+                </View>
             </View>
 {/* MY EVENTS */}
             <View style={styles.myEventContainer}>
-                <Text style={styles.text}>My events</Text>
+                <Text style={styles.textTitle}>{user.firstname}'s events :</Text>
             </View>
 {/* PARTICIPATE TO */}
             <View style={styles.eventContainer}>
-                <Text style={styles.text}>Participate to</Text>
+                <Text style={styles.textTitle}>Participate to</Text>
             </View>
 
 
@@ -70,6 +186,60 @@ import {
         alignItems: "center",
         justifyContent: "flex-start",
       },
+    // DESCRIPTION MODAL
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modalView: {
+      backgroundColor: "white",
+      width: "80%",
+      height:'50%',
+      borderRadius: 20,
+      padding: 10,
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    descriptionInput: {
+      width: '90%',
+      height: "40%",
+      borderColor: "#E74C3C",
+      borderWidth: 1,
+      borderRadius: 10,
+      fontSize: 16,
+      backgroundColor: 'white',
+      paddingLeft: 10,
+      marginTop: 10,
+    },
+    modalBtnContainer: {
+      flexDirection: 'row',
+      height: '30%',
+      marginTop: 7,
+    },
+    modalBtn: {
+      alignItems: "center",
+      justifyContent: "center",
+      marginHorizontal: 10,
+      padding: 7,
+      backgroundColor: "#E74C3C",
+      borderRadius: 10,
+      height: '70%',
+    },
+    modalTextBtn: {
+      color: "#ffffff",
+      fontWeight: "600",
+      fontSize: 15,
+      fontFamily: "Poppins-Medium",
+    },
       // HEADER
       headerContainer: {
         width: '100%',
@@ -87,7 +257,7 @@ import {
         height: '80%',
     },
     image: {
-      width: '50%',
+      width: '43%',
       height: '100%',
       borderRadius: '50%',
       marginRight: 8,
@@ -103,22 +273,70 @@ import {
     fontFamily: 'Poppins-Regular',
     color: '#E74C3C'
 },
-// 
-      reviewsContainer: {
-        width: '100%',
-        height: '7%',
-        backgroundColor: 'lightgrey',
-      },
-      descriptionContainer: {
-        width: '100%',
-        height: '18%',
-        backgroundColor: 'yellow'
-      },
+// DESCRIPTION
+descriptionContainer: {
+  width: '97%',
+  height: '20%',
+  flexDirection: 'column',
+  alignItems: 'center',
+},
+descriptionText: {
+  width: 350,
+  height: "55%",
+  borderColor: "#E74C3C",
+  borderWidth: 1,
+  borderRadius: 10,
+  fontSize: 16,
+  backgroundColor: 'white',
+  paddingHorizontal: 10,
+  fontFamily: 'Poppins-Regular'
+},
+reviewsContainer: {
+  width: '100%',
+  height: '7%',
+  backgroundColor: 'lightgrey',
+  },
+  modifyBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 4,
+    width: "40%",
+    marginTop: 10,
+    backgroundColor: "#E74C3C",
+    borderRadius: 10,
+  },
+  textButton: {
+    color: "#ffffff",
+    height: 30,
+    fontWeight: "600",
+    fontSize: 16,
+    fontFamily: "Poppins-Bold",
+  },
+// SPORT 
       sportContainer: {
         width: '100%',
         height: '10%',
-        backgroundColor: 'red',
+        flexDirection: 'column',
+        alignItems: 'center',
       },
+      mySports: {
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+      },
+      eachTextSport: {
+        fontFamily: 'Poppins-Medium',
+        fontSize: 20,   
+        color: '#E74C3C',
+        backgroundColor: 'white',
+        borderWidth: 2,
+        borderColor: '#E74C3C',
+        borderRadius: 15,
+        paddingHorizontal: 8,
+        marginHorizontal: 6,
+      },
+// 
       myEventContainer: {
         width: '100%',
         height: '18%',
@@ -130,10 +348,15 @@ import {
         backgroundColor: 'lightcoral',
       },
     //   TEXT
-    text: {
-        fontSize: 40
+    textTitle: {
+      fontFamily: 'Poppins-Medium',
+      fontSize: 26,    
+      backgroundColor: 'white',
     },
-    textsmall: {
-        fontSize: 20
-    },
+    textTitleSml: {
+      fontFamily: 'Poppins-Medium',
+      fontSize: 20,    
+      backgroundColor: 'white',
+
+    }
   })

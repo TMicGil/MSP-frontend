@@ -98,6 +98,7 @@ import {
         <View style={styles.container}>
             {/* HEADER ------ */}
             <View style={styles.headerContainer}>
+                <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
                 <View style={styles.userInfoContainer}>
                     <View style={styles.image}></View>
                     <View style={styles.userInfo}>
@@ -105,6 +106,7 @@ import {
                       <Text style={styles.textsmallname}>City</Text>
                     </View>
                 </View>
+                </TouchableOpacity>
 
                 <View style={styles.messageContainer}>
                   <TouchableOpacity onPress={() => navigation.navigate('MessageScreen')}>
