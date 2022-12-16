@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   ImageBackground,
+  Alert,
 } from "react-native";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -61,7 +62,7 @@ export default function QuizzScreen({ navigation }) {
       sex: isMale,
       mixedSex: mixed,
     };
-    console.log(body);
+    console.log('go button body : ', body);
     fetch("https://msp-backend.vercel.app/users/update", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -69,9 +70,11 @@ export default function QuizzScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log('go button data : ', data);
         if (data.result) {
           navigation.navigate("TabNavigator");
+        } else {
+          Alert.alert("Error :", data.error, {cancelable: true})
         }
       });
   };
@@ -256,6 +259,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    flexShrink: 1,
     alignItems: "center",
     marginTop: 45,
   },

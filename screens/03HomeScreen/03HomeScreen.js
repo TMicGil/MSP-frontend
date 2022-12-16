@@ -20,8 +20,12 @@ import {
 
   export default function HomeScreen({navigation}) {
 
+    const [hasPermission, setHasPermission] = useState(false);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value);
+
+
+    console.log('user reducer :', user)
 
     const [currentPosition, setCurrentPosition] = useState(null);
     const [searchFilter, setSearchFilter] = useState('');
@@ -48,14 +52,21 @@ import {
       .then(response => response.json())
       .then(data => {
         const realData = data.events.map((event) => {
+          console.log('user :',event.user, 'sport :', event.sport);
           const eventInformation = { userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour, latitude: event.latitude, longitude: event.longitude}
           dispatch(eventGeoLocation(eventInformation))
           return eventInformation
         })
         setEventData(realData)
+        setHasPermission(true);
       }
       )
     }, []);
+
+    if (!hasPermission) {
+      return <View><Text>Loading...</Text></View>
+    } 
+    
 // CREATE THE MARKERS WITH PROPS FROM THE DATABASE
     const eachEvent = eventData.map((data, i) => {
       return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.userId[0].firstname} description={data.sport} />
