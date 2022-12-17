@@ -51,7 +51,7 @@ import {
       .then(response => response.json())
       .then(data => {
         const realData = data.events.map((event) => {
-          console.log('event:', event);
+          console.log('event user level:', event.user);
           const eventInformation = { userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour, latitude: event.latitude, longitude: event.longitude, description: event.description}
           dispatch(eventGeoLocation(eventInformation))
           return eventInformation
@@ -85,7 +85,6 @@ import {
 
         <View style={styles.sportAndLogoContainer}>
           <Text style={styles.eventListInfo}>{data.sport}</Text>
-          <Text>logo</Text>
         </View>
 
         <View style={styles.dateHourContainer}>
@@ -311,7 +310,7 @@ import {
       },
       eventListInfo: {
         fontSize: 15,
-        fontFamily: 'Poppins-Regular',
+        fontFamily: 'Poppins-Medium',
       },
       eventGoBtnText: {
         color: "#ffffff",

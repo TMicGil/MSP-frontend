@@ -10,6 +10,8 @@ import {
     TouchableOpacity,
     ImageBackground,
   } from "react-native";
+  import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+  import { faStar } from "@fortawesome/free-solid-svg-icons";
 
   export default function EventScreen({navigation}) {
     return (
@@ -37,8 +39,13 @@ import {
             </View>
 
             <View style={styles.buttonContainer}>
-                <Text style={styles.text}>add to favs</Text>
-                <Text style={styles.text}>confirm</Text>
+              <TouchableOpacity>
+                <FontAwesomeIcon icon={faStar} size={26}/>
+              </TouchableOpacity>
+
+              <TouchableOpacity>
+                <Text>CONFIRM</Text>
+              </TouchableOpacity>
             </View>
 
 
