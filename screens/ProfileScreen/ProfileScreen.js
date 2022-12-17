@@ -14,6 +14,8 @@ import {
   } from "react-native";
   import { useSelector } from "react-redux";
   import { useState, useEffect } from "react";
+  import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+  import { faStar } from "@fortawesome/free-solid-svg-icons";
 
   export default function ProfileScreen({navigation}) {
 
@@ -33,6 +35,8 @@ import {
       .then(response => response.json())
       .then(data => {
         console.log('user info for profile screen:', data)
+        console.log('my events :', data.events)
+        console.log('participate :', data.participate)
         if (data.result) {
           setUserSports(data.user.sport);
           setUserDateBirth(data.user.dateOfBirth);
@@ -137,15 +141,20 @@ import {
                     <View style={styles.image}></View>
                     <View style={styles.userInfo}>
                       <Text style={styles.textsmallname}>{user.firstname}</Text>
-                      <Text style={styles.textsmallname}>City</Text>
-                      <Text style={styles.textsmallname}>{getAge(userDateBirth)} years old</Text>
-                      <Text style={styles.textsmallname}>{userLevel}</Text>
+                      <Text style={styles.textsmallinfo}>City</Text>
+                      <Text style={styles.textsmallinfo}>{getAge(userDateBirth)} years old</Text>
+                      <Text style={styles.textsmallinfo}>{userLevel}</Text>
                     </View>
                 </View>
             </View>
 {/* REVIEWS */}
             <View style={styles.reviewsContainer}>
-                <Text style={styles.textsmall}>Reviews</Text>
+                <View style={styles.starsContainer}>
+                  <FontAwesomeIcon icon={faStar} size={20}/>
+                  <FontAwesomeIcon icon={faStar} size={20}/>
+                  <FontAwesomeIcon icon={faStar} size={20}/>
+                </View>
+                <Text>See all reviews</Text>
             </View>
 {/* DESCRIPTION */}
             <View style={styles.descriptionContainer}>
@@ -166,10 +175,38 @@ import {
 {/* MY EVENTS */}
             <View style={styles.myEventContainer}>
                 <Text style={styles.textTitle}>{user.firstname}'s events :</Text>
+                <View style={styles.listOfEvents}>
+                  <View style={styles.eachEventContainer}>
+                    <Text style={styles.eventText}>Date</Text>
+                    <Text style={styles.eventText}>Sport</Text>
+                    <Text style={styles.eventText}>Hour</Text>
+                  </View>
+
+                  <View style={styles.eachEventContainer}>
+                    <Text style={styles.eventText}>Date</Text>
+                    <Text style={styles.eventText}>Sport</Text>
+                    <Text style={styles.eventText}>Hour</Text>
+                  </View>
+
+                </View>
             </View>
 {/* PARTICIPATE TO */}
             <View style={styles.eventContainer}>
                 <Text style={styles.textTitle}>Participate to</Text>
+                <View style={styles.listOfEvents}>
+                  <View style={styles.eachEventContainer}>
+                    <Text style={styles.eventText}>Date</Text>
+                    <Text style={styles.eventText}>Sport</Text>
+                    <Text style={styles.eventText}>Hour</Text>
+                  </View>
+
+                  <View style={styles.eachEventContainer}>
+                    <Text style={styles.eventText}>Date</Text>
+                    <Text style={styles.eventText}>Sport</Text>
+                    <Text style={styles.eventText}>Hour</Text>
+                  </View>
+
+                </View>
             </View>
 
 
@@ -275,8 +312,29 @@ import {
     backgroundColor: 'white',
     fontSize: 20,
     marginBottom: 4,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins-SemiBold',
     color: '#E74C3C'
+},
+textsmallinfo: {
+  backgroundColor: 'white',
+  fontSize: 15,
+  marginBottom: 4,
+  paddingLeft: 20,
+  fontFamily: 'Poppins-Regular',
+  color: '#E74C3C'
+},
+// REVIEWS 
+reviewsContainer: {
+  width: '100%',
+  height: '4%',
+  paddingHorizontal: 40,
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: 'lightgrey',
+  },
+starsContainer: {
+  flexDirection: 'row',
+  marginRight: 15,
 },
 // DESCRIPTION
 descriptionContainer: {
@@ -296,11 +354,6 @@ descriptionText: {
   paddingHorizontal: 10,
   fontFamily: 'Poppins-Regular'
 },
-reviewsContainer: {
-  width: '100%',
-  height: '7%',
-  backgroundColor: 'lightgrey',
-  },
   modifyBtn: {
     alignItems: "center",
     justifyContent: "center",
@@ -341,16 +394,31 @@ reviewsContainer: {
         paddingHorizontal: 8,
         marginHorizontal: 6,
       },
-// 
+// EVENT
       myEventContainer: {
         width: '100%',
         height: '18%',
-        backgroundColor: 'skyblue',
       },
       eventContainer: {
         width: '100%',
         height: '18%',
-        backgroundColor: 'lightcoral',
+      },
+      listOfEvents: {
+        padding: 10,
+      },
+      eachEventContainer: {
+        backgroundColor: 'white',
+        paddingVertical: 3,
+        paddingHorizontal: 15,
+        marginBottom: 3,
+        flexDirection: 'row',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderWidth: 2,
+        borderColor: '#E74C3C',
+        borderRadius: 10,
+
       },
     //   TEXT
     textTitle: {
@@ -362,6 +430,9 @@ reviewsContainer: {
       fontFamily: 'Poppins-Medium',
       fontSize: 20,    
       backgroundColor: 'white',
-
-    }
+    },
+    eventText: {
+      fontFamily: 'Poppins-Regular',
+      fontSize: 15,   
+    },
   })
