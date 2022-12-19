@@ -13,6 +13,8 @@ import {
   import MapView, { Marker } from "react-native-maps";
   import { useSelector } from "react-redux";
   import { useState } from "react";
+  import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+  import { faStar } from "@fortawesome/free-solid-svg-icons";
   
 
   export default function EventScreen({navigation}) {
