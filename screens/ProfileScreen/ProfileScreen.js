@@ -104,13 +104,22 @@ import {
     }
 
 // MAP TO GET AND DISPLAY ALL THE EVENTS CREATED BY THE USER
-        const eachUserEvent = userEvents.map((event, i) => {
-          return <View key={i} style={styles.eachEventContainer}>
-          <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
-          <Text style={styles.eventText}>{event.sport}</Text>
-          <Text style={styles.eventText}>{event.hour}</Text>
-        </View>
-        })
+  const eachUserEvent = userEvents.map((event, i) => {
+    if (eachUserEvent) {
+      return <View key={i} style={styles.eachEventContainer}>
+      <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
+      <Text style={styles.eventText}>{event.sport}</Text>
+      <Text style={styles.eventText}>{event.hour}</Text>
+    </View>
+    } else {
+      return <View style={styles.eachEventContainer}>
+        <Text style={styles.eventText}>No events ongoing!</Text>
+
+      </View>
+    }
+  })
+
+
 
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
