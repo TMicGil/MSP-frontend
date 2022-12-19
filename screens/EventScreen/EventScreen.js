@@ -47,8 +47,13 @@ import {
             </View>
 
             <View style={styles.buttonContainer}>
-                <Text style={styles.text}>add to favs</Text>
-                <Text style={styles.text}>confirm</Text>
+              <TouchableOpacity>
+                <FontAwesomeIcon icon={faStar} size={26}/>
+              </TouchableOpacity>
+
+              <TouchableOpacity>
+                <Text>CONFIRM</Text>
+              </TouchableOpacity>
             </View>
 
 

@@ -1,17 +1,16 @@
 import {
     Image,
-    KeyboardAvoidingView,
     StyleSheet,
     Text,
     View,
     TextInput,
     TouchableOpacity,
     ImageBackground,
+    ScrollView,
   } from "react-native";
   import { useEffect, useState } from 'react';
   import { useDispatch, useSelector } from "react-redux";
   import { userGeoLocation } from "../../reducers/user";
-  import MapView, { Marker } from "react-native-maps";
   import * as Location from 'expo-location';
   import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
   import { faEnvelope, faStar } from "@fortawesome/free-solid-svg-icons";
@@ -52,8 +51,8 @@ import {
       .then(response => response.json())
       .then(data => {
         const realData = data.events.map((event) => {
-          console.log('user :',event.user, 'sport :', event.sport);
-          const eventInformation = { userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour, latitude: event.latitude, longitude: event.longitude}
+          console.log('event user level:', event.user);
+          const eventInformation = { userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour, latitude: event.latitude, longitude: event.longitude, description: event.description}
           dispatch(eventGeoLocation(eventInformation))
           return eventInformation
         })
@@ -67,30 +66,48 @@ import {
       return <View><Text>Loading...</Text></View>
     } 
     
-// CREATE THE MARKERS WITH PROPS FROM THE DATABASE
-    const eachEvent = eventData.map((data, i) => {
-      return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.userId[0].firstname} description={data.sport} />
-    })
 
 
 // CREATE THE LIST WITH PROPS FROM THE DATABASE
-    const eachEventList = eventData.map((data, i) => {
-      return <View key={i} style={styles.eventContainer}>
-      <View style={styles.starContainer}>
-          <FontAwesomeIcon
-          icon={faStar}
-          size={22}
-            />
+    const eachEventList2 = eventData.map((data, i) => {
+      return <View key={i} style={styles.cardEventContainer}>
+
+      <View style={styles.eventUserInfo}>
+      <View style={styles.profilePic}>
       </View>
       <Text style={styles.eventListInfo}>{data.userId[0].firstname}</Text>
-      <Text style={styles.eventListInfo}>{data.sport}</Text>
-      <Text style={styles.eventListInfo}>{data.hour}</Text>
+      <Text style={styles.eventListInfo}>level</Text>
+      </View>
 
-        <TouchableOpacity style={styles.joinBtn} onPress={() => navigation.navigate('Event')}>
-          <Text style={styles.joinText}>LOOK</Text>
-        </TouchableOpacity>
 
+
+      <View style={styles.eventInfoContainer}>
+
+        <View style={styles.sportAndLogoContainer}>
+          <Text style={styles.eventListInfo}>{data.sport}</Text>
+        </View>
+
+        <View style={styles.dateHourContainer}>
+          <Text style={styles.eventListInfo}>{data.date}</Text>
+          <Text style={styles.eventListInfo}>{data.hour}</Text>
+        </View>
+
+        <View style={styles.eventDescriptionContainer}>
+          <Text>{data.description}</Text>
+        </View>
+
+        <View style={styles.eventGoBtnContainer}>
+            <FontAwesomeIcon
+              icon={faStar}
+              size={22}/>
+            <TouchableOpacity style={styles.eventGoBtn} onPress={() => navigation.navigate('Event')}>
+                <Text style={styles.eventGoBtnText}>GO</Text>
+            </TouchableOpacity>
+        </View>
+
+      </View>
     </View>
+
     })
 
     return (
@@ -117,13 +134,6 @@ import {
                   </TouchableOpacity>
                 </View>
             </View>
-            {/* MAP ------- */}
-            <View style={styles.mapContainer}>
-                <MapView style={styles.map} region={currentPosition}>
-                    {currentPosition && <Marker coordinate={currentPosition} title={user.firstname} description="Your position" pinColor="blue" />}
-                    {eachEvent}
-                </MapView>
-            </View>
             {/* TODAY IN NICE */}
             <View style={styles.todayContainer}>
                 <Text style={styles.todayText}>Today in Nice :</Text>
@@ -140,12 +150,12 @@ import {
                 value={searchFilter}/>
             </View>
             {/* LIST OF EVENTS */}
+            <ScrollView style={{width: '95%', backgroundColor: 'white'}}>
             <View style={styles.listEventContainer}>
-
-              {eachEventList}
-
-
+              {eachEventList2}
             </View>
+            </ScrollView>
+
             {/* PROPOSE ACTIVITY */}
             <View style={styles.proposeContainer}>
                 <TouchableOpacity style={styles.proposeBtn} onPress={() => navigation.navigate('MyEvent')}>
@@ -187,24 +197,24 @@ import {
         alignItems: 'center',
         marginBottom: 5,
         height: '80%',
-    },
+      },
     image: {
       width: '35%',
       height: '100%',
       borderRadius: '50%',
       marginRight: 8,
       backgroundColor: 'orange'
-  },
-  userInfo: {
-    flexDirection: 'column',
-  },
-  textsmallname: {
-    backgroundColor: 'white',
-    fontSize: 20,
-    marginBottom: 4,
-    fontFamily: 'Poppins-Regular',
-    color: '#E74C3C'
-},
+      },
+      userInfo: {
+        flexDirection: 'column',
+      },
+      textsmallname: {
+        backgroundColor: 'white',
+        fontSize: 20,
+        marginBottom: 4,
+        fontFamily: 'Poppins-Regular',
+        color: '#E74C3C'
+      },
       messageContainer: {
         backgroundColor: 'white',
         height: '70%',
@@ -213,39 +223,26 @@ import {
         alignItems: 'center',
         justifyContent: 'center',
       },
-      // MAP --------- 
-      mapContainer: {
-        width: '97%',
-        height: '35%',
-        borderWidth: 2,
-        borderColor: '#E74C3C',
-        borderRadius: 10,
-      },
-      map: {
-        flex: 1,
-        borderRadius: 10,
-      },
       // TODAY -------
       todayContainer: {
-        width: '97%',
         height: '4%',
-        marginVertical: 5,
+        marginVertical: 10,
       },
       todayText: {
         fontFamily: 'Poppins-Medium',
         fontSize: 23,    
-        textShadowColor: "white",
+        backgroundColor: 'white',
         textShadowOffset: { width: -1, height: 1 },
         textShadowRadius: 20,
       },
       // SEARCH -------
       searchContainer: {
-        width: '97%',
+        width: '90%',
         height: '7%',
         justifyContent: 'center',
       },
       inputs: {
-        width: "80%",
+        width: "100%",
         height: "10%",
         borderColor: "grey",
         borderWidth: 2,
@@ -259,44 +256,68 @@ import {
       listEventContainer: {
         width: '97%',
         padding: 5,
-        height: '27%',
-        backgroundColor: 'white',
+        height: '57%',
         borderRadius: 20,
       },
-      eventContainer: {
+      cardEventContainer: {
+        width: '97%',
         flexDirection: 'row',
-        alignItems: 'flex-start',
-        justifyContent: 'space-between',
-        marginVertical: 5,
-        paddingBottom: 3,
+        height: 170,
         borderBottomWidth: 1,
         borderBottomColor: '#E74C3C',
-
+        marginTop: 5,
+      },
+      eventUserInfo: {
+        width: '22%',
+        alignItems: 'center',
+      },
+      profilePic: {
+        width: '100%',
+        height: '40%',
+        backgroundColor: 'orange',
+        borderRadius: '50%',
+      },
+      eventInfoContainer: {
+        margin: 10,
+        width: '78%',
+  
+      },
+      sportAndLogoContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      },
+      dateHourContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 5,
+  
+      },
+      eventDescriptionContainer: {
+        height: '40%',
+        marginVertical: 10,
+  
+      },
+      eventGoBtnContainer: {
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+  
+      },
+      eventGoBtn:{
+        backgroundColor: '#E74C3C',
+        borderRadius: 20,
+        width: '30%',
+        alignItems: 'center',
       },
       eventListInfo: {
-        fontSize: 20,
-        fontFamily: 'Poppins-Regular',
+        fontSize: 15,
+        fontFamily: 'Poppins-Medium',
       },
-      starContainer: {
-        backgroundColor: 'white',
-        borderRadius: '50%',
-        height: '100%',
-        width: '8%',
-        alignItems: 'center',
-
-      },
-      joinBtn: {
-        backgroundColor: '#E74C3C',
-        height: '100%',
-        width: '20%',
-        borderRadius: 20,
-        alignItems: 'center',
-      },
-      joinText: {
+      eventGoBtnText: {
         color: "#ffffff",
         fontWeight: "600",
         fontSize: 20,
         fontFamily: "Poppins-Medium",
+
       },
       // PROPOSE ACTIVITY
       proposeContainer: {
