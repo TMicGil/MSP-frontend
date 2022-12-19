@@ -10,8 +10,16 @@ import {
     TouchableOpacity,
     ImageBackground,
   } from "react-native";
+  import MapView, { Marker } from "react-native-maps";
+  import { useSelector } from "react-redux";
+  import { useState } from "react";
+  
 
   export default function EventScreen({navigation}) {
+
+    const user = useSelector((state) => state.user.value);
+    const [eventPosition, setEventPosition] = useState(null);
+
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
         <View style={styles.container}>
@@ -21,7 +29,9 @@ import {
             </View>
 
             <View style={styles.mapContainer}>
-                <Text style={styles.text}>Map</Text>
+                <MapView style={styles.map} region={user.location}>
+                    {user.location && <Marker coordinate={user.location} title={user.firstname} description="Your position" pinColor="blue" />}
+                </MapView>
             </View>
 
             <View style={styles.informationContainer}>
@@ -67,9 +77,15 @@ import {
         marginTop: 45,
       },
       mapContainer: {
-        width: '100%',
+        width: '97%',
         height: '30%',
-        backgroundColor: 'yellow'
+        borderWidth: 2,
+        borderColor: '#E74C3C',
+        borderRadius: 10,
+      },
+      map: {
+        flex: 1,
+        borderRadius: 10,
       },
       informationContainer: {
         width: '100%',
