@@ -15,6 +15,7 @@ import {
   import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
   import { faEnvelope, faStar } from "@fortawesome/free-solid-svg-icons";
   import { eventGeoLocation } from "../../reducers/location";
+import { transferEvent } from "../../reducers/event";
 
 
   export default function HomeScreen({navigation}) {
@@ -51,7 +52,6 @@ import {
       .then(response => response.json())
       .then(data => {
         const realData = data.events.map((event) => {
-          console.log('event user level:', event.user);
           const eventInformation = { userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour, latitude: event.latitude, longitude: event.longitude, description: event.description}
           dispatch(eventGeoLocation(eventInformation))
           return eventInformation
@@ -65,11 +65,19 @@ import {
     if (!hasPermission) {
       return <View><Text>Loading...</Text></View>
     } 
+
+
     
 
 
 // CREATE THE LIST WITH PROPS FROM THE DATABASE
     const eachEventList2 = eventData.map((data, i) => {
+      console.log('-----each event data:', data)
+      const transferEventData = {username: data.userId[0].firstname, sport: data.sport, date: data.date, hour: data.hour, description: data.description, latitude: data.latitude, longitude: data.longitude}
+      const handleEvent= () => {
+        dispatch(transferEvent(transferEventData))
+        navigation.navigate('Event')
+      }
       return <View key={i} style={styles.cardEventContainer}>
 
       <View style={styles.eventUserInfo}>
@@ -100,7 +108,7 @@ import {
             <FontAwesomeIcon
               icon={faStar}
               size={22}/>
-            <TouchableOpacity style={styles.eventGoBtn} onPress={() => navigation.navigate('Event')}>
+            <TouchableOpacity style={styles.eventGoBtn} onPress={() => handleEvent()}>
                 <Text style={styles.eventGoBtnText}>GO</Text>
             </TouchableOpacity>
         </View>

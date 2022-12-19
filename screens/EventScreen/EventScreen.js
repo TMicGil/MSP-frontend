@@ -12,15 +12,32 @@ import {
   } from "react-native";
   import MapView, { Marker } from "react-native-maps";
   import { useSelector } from "react-redux";
-  import { useState } from "react";
+  import { useState, useEffect } from "react";
   import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
   import { faStar, faLocationDot } from "@fortawesome/free-solid-svg-icons";
+  import { transferEvent } from "../../reducers/event";
   
 
   export default function EventScreen({navigation}) {
+    const [hasPermission, setHasPermission] = useState(false);
 
     const user = useSelector((state) => state.user.value);
+    const event = useSelector((state) => state.event.value);
+
+    console.log('//// event', event)
+
     const [eventPosition, setEventPosition] = useState(null);
+
+
+    useEffect(() => {
+        const position = {latitude: event.latitude, longitude: event.longitude, latitudeDelta: 0.03, longitudeDelta: 0.007}
+        setEventPosition(position);
+        setHasPermission(true);
+    }, [])
+
+    if (!hasPermission) {
+      return <View><Text>Loading...</Text></View>
+    } 
 
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
@@ -31,7 +48,7 @@ import {
                 <View style={styles.userInfoContainer}>
                     <View style={styles.image}></View>
                     <View style={styles.userInfo}>
-                      <Text style={styles.textsmallname}>Name</Text>
+                      <Text style={styles.textsmallname}>{event.username}</Text>
                     </View>
                 </View>
 
@@ -46,14 +63,14 @@ import {
             </View>
 {/* MAP */}
             <View style={styles.mapContainer}>
-                <MapView style={styles.map} region={user.location}>
-                    {user.location && <Marker coordinate={user.location} title={user.firstname} description="Your position" pinColor="blue" />}
+                <MapView style={styles.map} region={eventPosition}>
+                    <Marker coordinate={eventPosition} title={event.username} description={event.sport} pinColor="orange" />
                 </MapView>
             </View>
 {/* EVENT INFO (SPORT, DATE) */}
             <View style={styles.informationContainer}>
-                <Text style={styles.infoText}>Sport</Text>
-                <Text style={styles.infoText}>Date + Heure</Text>
+                <Text style={styles.infoText}>{event.sport}</Text>
+                <Text style={styles.infoText}>{event.date} - {event.hour}</Text>
             </View>
 {/* ADDRESS */}
             <View style={styles.addressContainer}>
@@ -62,7 +79,7 @@ import {
             </View>
 {/* DESCRIPTION */}
             <View style={styles.descriptionContainer}>
-              <Text style={styles.descriptionText}>event description</Text>
+              <Text style={styles.descriptionText}>{event.description}</Text>
             </View>
 {/* BTN STAR AND CONFIRM */}
             <View style={styles.buttonContainer}>

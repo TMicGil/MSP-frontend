@@ -23,9 +23,10 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import user from './reducers/user';
 import location from './reducers/location';
+import event from './reducers/event';
 
 const store = configureStore({
-  reducer: {user, location}
+  reducer: {user, location, event}
 })
 
 SplashScreen.preventAutoHideAsync();
