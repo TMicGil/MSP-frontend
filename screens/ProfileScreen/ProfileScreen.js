@@ -104,19 +104,28 @@ import {
     }
 
 // MAP TO GET AND DISPLAY ALL THE EVENTS CREATED BY THE USER
-  const eachUserEvent = userEvents.map((event, i) => {
-    if (eachUserEvent) {
-      return <View key={i} style={styles.eachEventContainer}>
-      <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
-      <Text style={styles.eventText}>{event.sport}</Text>
-      <Text style={styles.eventText}>{event.hour}</Text>
-    </View>
-    } else {
-      return <View style={styles.eachEventContainer}>
-        <Text style={styles.eventText}>No events ongoing!</Text>
+let noEvents = (<View style={styles.eachEventContainer}>
+  <Text style={styles.eventText}>No events ongoing!</Text>
+</View>)
 
-      </View>
-    }
+let noParticipate = (<View style={styles.eachEventContainer}>
+  <Text style={styles.eventText}>No participation ongoing!</Text>
+</View>)
+
+const eachUserEvent = userEvents.map((event, i) => {
+  return <View key={i} style={styles.eachEventContainer}>
+  <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
+  <Text style={styles.eventText}>{event.sport}</Text>
+  <Text style={styles.eventText}>{event.hour}</Text>
+</View>
+})
+
+  const eachUserParticipate = userParticipate.map((event, i) => {
+    return <View key={i} style={styles.eachEventContainer}>
+    <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
+    <Text style={styles.eventText}>{event.sport}</Text>
+    <Text style={styles.eventText}>{event.hour}</Text>
+  </View>
   })
 
 
@@ -204,7 +213,7 @@ import {
                 <Text style={styles.textTitle}>{user.firstname}'s events :</Text>
                 <View style={styles.listOfEvents}>
                   <View style={styles.eachEventContainer}>
-                    {eachUserEvent}
+                    {eachUserEvent.length === 0 ? noEvents : eachUserEvent}
                   </View>
 
                 </View>
@@ -213,18 +222,7 @@ import {
             <View style={styles.eventContainer}>
                 <Text style={styles.textTitle}>Participate to</Text>
                 <View style={styles.listOfEvents}>
-                  <View style={styles.eachEventContainer}>
-                    <Text style={styles.eventText}>Date</Text>
-                    <Text style={styles.eventText}>Sport</Text>
-                    <Text style={styles.eventText}>Hour</Text>
-                  </View>
-
-                  <View style={styles.eachEventContainer}>
-                    <Text style={styles.eventText}>Date</Text>
-                    <Text style={styles.eventText}>Sport</Text>
-                    <Text style={styles.eventText}>Hour</Text>
-                  </View>
-
+                  {eachUserParticipate.length === 0 ? noParticipate : eachUserParticipate}
                 </View>
             </View>
 
