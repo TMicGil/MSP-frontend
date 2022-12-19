@@ -67,6 +67,7 @@ import {
 
 // CREATE EACH COMPONENT OF THE LIST WITH PROPS FROM THE DATABASE
     const eachEventList2 = eventData.map((data, i) => {
+      console.log('//// INFO ABOUT EACH EVENT:' , data)
       const transferEventData = {username: data.userId[0].firstname, sport: data.sport, date: data.date, hour: data.hour, description: data.description, latitude: data.latitude, longitude: data.longitude, address: data.address}
       const handleEvent= () => {
         dispatch(transferEvent(transferEventData))
