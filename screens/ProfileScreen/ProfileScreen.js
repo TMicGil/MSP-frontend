@@ -1,5 +1,4 @@
 import {
-    Image,
     KeyboardAvoidingView,
     Platform,
     StyleSheet,
@@ -9,7 +8,6 @@ import {
     TextInput,
     TouchableOpacity,
     ImageBackground,
-    Keyboard,
     Alert,
   } from "react-native";
   import { useSelector } from "react-redux";
@@ -23,26 +21,19 @@ import {
 
     const [hasPermission, setHasPermission] = useState(false);
 
+    const [userEvents, setUserEvents] = useState([]);
+    const [userParticipate, setUserParticipate] = useState([])
+    const [userSports, setUserSports] = useState([]);
     const [userDescription, setUserDescription] = useState('');
     const [userLevel, setUserLevel] = useState('');
     const [descriptionModal, setDescriptionModal] = useState(false);
-    const [userSports, setUserSports] = useState([]);
     const [userDateBirth, setUserDateBirth] = useState(0);
-
-    const [userEvents, setUserEvents] = useState([]);
-    const [userParticipate, setUserParticipate] = useState([])
-
 
     // GET USER INFO FROM DATABASE
     useEffect(() =>{
       fetch(`https://msp-backend.vercel.app/users/${user.token}`)
       .then(response => response.json())
       .then(data => {
-        console.log('----PROFILE user EVENTS:', data.userInfo.events)
-        console.log('----PROFILE user PARTICIPATE:', data.userInfo.participate)
-
-        // console.log('----PROFILE my events :', data.data.events)
-        // console.log('----PROFILE participate :', data.data.participate)
         if (data.result) {
           setUserSports(data.userInfo.sport);
           setUserDateBirth(data.userInfo.dateOfBirth);
@@ -50,8 +41,6 @@ import {
           setUserLevel(data.userInfo.level);
           setUserEvents(data.userInfo.events);
           setUserParticipate(data.userInfo.participate);
-
-
         }
         setHasPermission(true);
       }
@@ -79,7 +68,7 @@ import {
       return yearsDifference;
     };
 
-// MODAL FOR MODIFY THE DESCRIPTION
+// MODAL TO MODIFY THE DESCRIPTION
     const showDescriptionModal = () => {
       setDescriptionModal(!descriptionModal)
     }
@@ -103,7 +92,26 @@ import {
       setDescriptionModal(!descriptionModal);
     }
 
-// MAP TO GET AND DISPLAY ALL THE EVENTS CREATED BY THE USER
+
+// .MAP TO GET AND DISPLAY ALL THE EVENTS CREATED BY THE USER
+const eachUserEvent = userEvents.map((event, i) => {
+  return <View key={i} style={styles.eachEventContainer}>
+  <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
+  <Text style={styles.eventText}>{event.sport}</Text>
+  <Text style={styles.eventText}>{event.hour.slice(11, 16)}</Text>
+</View>
+})
+
+// .MAP TO GET AND DISPLAY ALL THE PARTICIPATION OF THE USER
+  const eachUserParticipate = userParticipate.map((event, i) => {
+    return <View key={i} style={styles.eachEventContainer}>
+    <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
+    <Text style={styles.eventText}>{event.sport}</Text>
+    <Text style={styles.eventText}>{event.hour.slice(11, 16)}</Text>
+  </View>
+  })
+
+// BACK UP IF NO EVENTS CREATED OR NO PARTICIPATION
 let noEvents = (<View style={styles.eachEventContainer}>
   <Text style={styles.eventText}>No events ongoing!</Text>
 </View>)
@@ -112,24 +120,9 @@ let noParticipate = (<View style={styles.eachEventContainer}>
   <Text style={styles.eventText}>No participation ongoing!</Text>
 </View>)
 
-const eachUserEvent = userEvents.map((event, i) => {
-  return <View key={i} style={styles.eachEventContainer}>
-  <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
-  <Text style={styles.eventText}>{event.sport}</Text>
-  <Text style={styles.eventText}>{event.hour}</Text>
-</View>
-})
-
-  const eachUserParticipate = userParticipate.map((event, i) => {
-    return <View key={i} style={styles.eachEventContainer}>
-    <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
-    <Text style={styles.eventText}>{event.sport}</Text>
-    <Text style={styles.eventText}>{event.hour}</Text>
-  </View>
-  })
 
 
-
+// PAGE >>>>>>>>>
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
         <View style={styles.container}>

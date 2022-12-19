@@ -15,7 +15,7 @@ import {
   import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
   import { faEnvelope, faStar } from "@fortawesome/free-solid-svg-icons";
   import { eventGeoLocation } from "../../reducers/location";
-import { transferEvent } from "../../reducers/event";
+  import { transferEvent } from "../../reducers/event";
 
 
   export default function HomeScreen({navigation}) {
@@ -24,13 +24,11 @@ import { transferEvent } from "../../reducers/event";
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value);
 
-
-    console.log('---HOMESCREEN----user reducer :', user)
-
     const [currentPosition, setCurrentPosition] = useState(null);
     const [searchFilter, setSearchFilter] = useState('');
     const [eventData, setEventData] = useState([])
 
+    // USE EFFECT FOR THE GEO LOCALISATION AUTHORISATION
     useEffect(() => {
       (async () => {
         const { status } = await Location.requestForegroundPermissionsAsync();
@@ -46,13 +44,13 @@ import { transferEvent } from "../../reducers/event";
       })();
     }, []);
 
-// GET ALL EVENTS FROM DATABASE
+// GET ALL EVENTS FROM DATABASE FOR THE FEED
     useEffect(() =>{
       fetch("https://msp-backend.vercel.app/events/all")
       .then(response => response.json())
       .then(data => {
         const realData = data.events.map((event) => {
-          const eventInformation = { userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour, latitude: event.latitude, longitude: event.longitude, description: event.description}
+          const eventInformation = { userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour.slice(11, 16), latitude: event.latitude, longitude: event.longitude, description: event.description, address: event.address}
           dispatch(eventGeoLocation(eventInformation))
           return eventInformation
         })
@@ -67,13 +65,9 @@ import { transferEvent } from "../../reducers/event";
     } 
 
 
-    
-
-
-// CREATE THE LIST WITH PROPS FROM THE DATABASE
+// CREATE EACH COMPONENT OF THE LIST WITH PROPS FROM THE DATABASE
     const eachEventList2 = eventData.map((data, i) => {
-      console.log('---HOMESCREEN---each event data:', data)
-      const transferEventData = {username: data.userId[0].firstname, sport: data.sport, date: data.date, hour: data.hour, description: data.description, latitude: data.latitude, longitude: data.longitude}
+      const transferEventData = {username: data.userId[0].firstname, sport: data.sport, date: data.date, hour: data.hour, description: data.description, latitude: data.latitude, longitude: data.longitude, address: data.address}
       const handleEvent= () => {
         dispatch(transferEvent(transferEventData))
         navigation.navigate('Event')
@@ -118,6 +112,7 @@ import { transferEvent } from "../../reducers/event";
 
     })
 
+    // PAGE >>>>>>>>>>>>>>>
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
         <View style={styles.container}>
@@ -170,10 +165,6 @@ import { transferEvent } from "../../reducers/event";
                     <Text style={styles.proposeText}>PROPOSE AN ACTIVITY</Text>
                 </TouchableOpacity>
             </View>
-
-
-
-
 
         </View>
         </ImageBackground>

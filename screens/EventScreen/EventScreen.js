@@ -1,12 +1,9 @@
 import {
     Image,
-    KeyboardAvoidingView,
-    Platform,
     StyleSheet,
     Text,
     View,
     Modal,
-    TextInput,
     TouchableOpacity,
     ImageBackground,
   } from "react-native";
@@ -15,20 +12,16 @@ import {
   import { useState, useEffect } from "react";
   import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
   import { faStar, faLocationDot } from "@fortawesome/free-solid-svg-icons";
-  import { transferEvent } from "../../reducers/event";
   
 
   export default function EventScreen({navigation}) {
     const [hasPermission, setHasPermission] = useState(false);
-
-    const user = useSelector((state) => state.user.value);
-    const event = useSelector((state) => state.event.value);
-
-    console.log('//// event', event)
-
     const [eventPosition, setEventPosition] = useState(null);
 
+    const event = useSelector((state) => state.event.value);
 
+
+  // USE EFFECT FOR GETTING THE COORDINATE (FOR THE MARKER) OF THE EVENT
     useEffect(() => {
         const position = {latitude: event.latitude, longitude: event.longitude, latitudeDelta: 0.03, longitudeDelta: 0.007}
         setEventPosition(position);
@@ -39,6 +32,7 @@ import {
       return <View><Text>Loading...</Text></View>
     } 
 
+  // PAGE >>>>>>>>>>>
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
         <View style={styles.container}>
@@ -75,7 +69,7 @@ import {
 {/* ADDRESS */}
             <View style={styles.addressContainer}>
                 <FontAwesomeIcon icon={faLocationDot} size={22}/>
-                <Text style={styles.addressText}>Address of the event</Text>
+                <Text style={styles.addressText}>{event.address}</Text>
             </View>
 {/* DESCRIPTION */}
             <View style={styles.descriptionContainer}>
