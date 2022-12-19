@@ -76,7 +76,7 @@ import {
       <View style={styles.profilePic}>
       </View>
       <Text style={styles.eventListInfo}>{data.userId[0].firstname}</Text>
-      <Text style={styles.eventListInfo}>level</Text>
+      <Text style={styles.eventListInfo}>{data.userId[0].level}</Text>
       </View>
 
 

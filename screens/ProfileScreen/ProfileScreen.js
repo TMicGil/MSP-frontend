@@ -407,7 +407,7 @@ descriptionText: {
         padding: 10,
       },
       eachEventContainer: {
-        backgroundColor: 'white',
+        backgroundColor: '#E74C3C',
         paddingVertical: 3,
         paddingHorizontal: 15,
         marginBottom: 3,
@@ -415,8 +415,6 @@ descriptionText: {
         width: '100%',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderWidth: 2,
-        borderColor: '#E74C3C',
         borderRadius: 10,
 
       },
@@ -433,6 +431,7 @@ descriptionText: {
     },
     eventText: {
       fontFamily: 'Poppins-Regular',
-      fontSize: 15,   
+      fontSize: 15,  
+      color: 'white', 
     },
   })
