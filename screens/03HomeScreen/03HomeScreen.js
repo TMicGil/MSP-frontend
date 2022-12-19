@@ -25,7 +25,7 @@ import { transferEvent } from "../../reducers/event";
     const user = useSelector((state) => state.user.value);
 
 
-    console.log('user reducer :', user)
+    console.log('---HOMESCREEN----user reducer :', user)
 
     const [currentPosition, setCurrentPosition] = useState(null);
     const [searchFilter, setSearchFilter] = useState('');
@@ -72,7 +72,7 @@ import { transferEvent } from "../../reducers/event";
 
 // CREATE THE LIST WITH PROPS FROM THE DATABASE
     const eachEventList2 = eventData.map((data, i) => {
-      console.log('-----each event data:', data)
+      console.log('---HOMESCREEN---each event data:', data)
       const transferEventData = {username: data.userId[0].firstname, sport: data.sport, date: data.date, hour: data.hour, description: data.description, latitude: data.latitude, longitude: data.longitude}
       const handleEvent= () => {
         dispatch(transferEvent(transferEventData))

@@ -22,11 +22,15 @@ import {
     const user = useSelector((state) => state.user.value);
 
     const [hasPermission, setHasPermission] = useState(false);
+
     const [userDescription, setUserDescription] = useState('');
     const [userLevel, setUserLevel] = useState('');
     const [descriptionModal, setDescriptionModal] = useState(false);
     const [userSports, setUserSports] = useState([]);
     const [userDateBirth, setUserDateBirth] = useState(0);
+
+    const [userEvents, setUserEvents] = useState([]);
+    const [userParticipate, setUserParticipate] = useState([])
 
 
     // GET USER INFO FROM DATABASE
@@ -34,14 +38,19 @@ import {
       fetch(`https://msp-backend.vercel.app/users/${user.token}`)
       .then(response => response.json())
       .then(data => {
-        console.log('user info for profile screen:', data)
-        console.log('my events :', data.events)
-        console.log('participate :', data.participate)
+        console.log('----PROFILE user EVENTS:', data.userInfo.events)
+        console.log('----PROFILE user PARTICIPATE:', data.userInfo.participate)
+
+        // console.log('----PROFILE my events :', data.data.events)
+        // console.log('----PROFILE participate :', data.data.participate)
         if (data.result) {
-          setUserSports(data.user.sport);
-          setUserDateBirth(data.user.dateOfBirth);
-          setUserDescription(data.user.description);
-          setUserLevel(data.user.level)
+          setUserSports(data.userInfo.sport);
+          setUserDateBirth(data.userInfo.dateOfBirth);
+          setUserDescription(data.userInfo.description);
+          setUserLevel(data.userInfo.level);
+          setUserEvents(data.userInfo.events);
+          setUserParticipate(data.userInfo.participate);
+
 
         }
         setHasPermission(true);
@@ -53,12 +62,12 @@ import {
       return <View><Text>Loading...</Text></View>
     } 
 
-    // MAP TO GET AND DISPLAY ALL THE SPORT SELECTED IN THE DB
+// MAP TO GET AND DISPLAY ALL THE SPORT SELECTED IN THE DB
     const eachUserSport = userSports.map((sport, i)=> {
       return <Text key={i} style={styles.eachTextSport}>{sport}</Text>
     })
 
-    // GET THE USER's AGE FOR HEADER
+// GET THE USER's AGE FOR HEADER
     const getAge = (stringDate) => {
       const today = new Date();
       const birthDate = new Date (stringDate);
@@ -75,7 +84,7 @@ import {
       setDescriptionModal(!descriptionModal)
     }
 
-    // SEND THE USER DESCRIPTION TO DB 
+// SEND THE USER DESCRIPTION TO DB 
     const sendDescription = () => {
       const body = {
         token: user.token,
@@ -93,6 +102,15 @@ import {
       });
       setDescriptionModal(!descriptionModal);
     }
+
+// MAP TO GET AND DISPLAY ALL THE EVENTS CREATED BY THE USER
+        const eachUserEvent = userEvents.map((event, i) => {
+          return <View key={i} style={styles.eachEventContainer}>
+          <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
+          <Text style={styles.eventText}>{event.sport}</Text>
+          <Text style={styles.eventText}>{event.hour}</Text>
+        </View>
+        })
 
     return (
         <ImageBackground style={styles.imgBackground} source={require('../../assets/background.jpg')}>
@@ -177,15 +195,7 @@ import {
                 <Text style={styles.textTitle}>{user.firstname}'s events :</Text>
                 <View style={styles.listOfEvents}>
                   <View style={styles.eachEventContainer}>
-                    <Text style={styles.eventText}>Date</Text>
-                    <Text style={styles.eventText}>Sport</Text>
-                    <Text style={styles.eventText}>Hour</Text>
-                  </View>
-
-                  <View style={styles.eachEventContainer}>
-                    <Text style={styles.eventText}>Date</Text>
-                    <Text style={styles.eventText}>Sport</Text>
-                    <Text style={styles.eventText}>Hour</Text>
+                    {eachUserEvent}
                   </View>
 
                 </View>
