@@ -50,7 +50,7 @@ import {
       .then(response => response.json())
       .then(data => {
         const realData = data.events.map((event) => {
-          const eventInformation = { userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour.slice(11, 16), latitude: event.latitude, longitude: event.longitude, description: event.description, address: event.address}
+          const eventInformation = { eventId: event._id, userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour.slice(11, 16), latitude: event.latitude, longitude: event.longitude, description: event.description, address: event.address}
           dispatch(eventGeoLocation(eventInformation))
           return eventInformation
         })
@@ -67,8 +67,7 @@ import {
 
 // CREATE EACH COMPONENT OF THE LIST WITH PROPS FROM THE DATABASE
     const eachEventList2 = eventData.map((data, i) => {
-      console.log('//// INFO ABOUT EACH EVENT:' , data)
-      const transferEventData = {username: data.userId[0].firstname, sport: data.sport, date: data.date, hour: data.hour, description: data.description, latitude: data.latitude, longitude: data.longitude, address: data.address}
+      const transferEventData = {eventId: data.eventId, username: data.userId[0].firstname, sport: data.sport, date: data.date, hour: data.hour, description: data.description, latitude: data.latitude, longitude: data.longitude, address: data.address}
       const handleEvent= () => {
         dispatch(transferEvent(transferEventData))
         navigation.navigate('Event')

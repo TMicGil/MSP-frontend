@@ -6,6 +6,7 @@ import {
     Modal,
     TouchableOpacity,
     ImageBackground,
+    Alert,
   } from "react-native";
   import MapView, { Marker } from "react-native-maps";
   import { useSelector } from "react-redux";
@@ -19,6 +20,7 @@ import {
     const [eventPosition, setEventPosition] = useState(null);
 
     const event = useSelector((state) => state.event.value);
+    const user = useSelector((state) => state.user.value);
 
 
   // USE EFFECT FOR GETTING THE COORDINATE (FOR THE MARKER) OF THE EVENT
@@ -31,6 +33,25 @@ import {
     if (!hasPermission) {
       return <View><Text>Loading...</Text></View>
     } 
+
+  //  PARTICIPATE TO A EVENT CONFIRM
+  const handleParticipate = () => {
+    const body = {
+      token: user.token,
+      eventsId: event.eventId,
+    };
+    fetch('https://msp-backend.vercel.app/events/participate', {
+      method: 'PUT',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }).then((response) => response.json())
+    .then((data) => {
+      console.log(' ///// RESPONSE FROM DATABASE PARTICIPATE :', data)
+      if (data.result) {
+        Alert.alert("Confirmation :", "Your inscription has been confirmed:)", {cancelable: true})
+      }
+    });
+  }
 
   // PAGE >>>>>>>>>>>
     return (
@@ -82,7 +103,7 @@ import {
                 <FontAwesomeIcon style={styles.textButton} icon={faStar} size={26}/>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.confirmBtn}>
+              <TouchableOpacity style={styles.confirmBtn} onPress={() => handleParticipate()}>
                 <Text style={styles.textButton}>CONFIRM</Text>
               </TouchableOpacity>
 
