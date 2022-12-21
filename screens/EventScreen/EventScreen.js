@@ -18,6 +18,7 @@ export default function EventScreen({ navigation }) {
   const [eventPosition, setEventPosition] = useState(null);
 
   const [isMyEvent, setIsMyEvent] = useState(false);
+  const [isParticipate, setIsParticipate] = useState(false);
 
   const event = useSelector((state) => state.event.value);
   const user = useSelector((state) => state.user.value);
@@ -108,18 +109,23 @@ export default function EventScreen({ navigation }) {
       });
   };
 
-  // IS MY EVENT ? 
+  // IS MY EVENT ? PARTICIPATE ?
   fetch(`https://msp-backend.vercel.app/users/${user.token}`)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.userInfo.events)
       for (let i = 0; i < data.userInfo.events.length; i++) {
         if (data.userInfo.events[i]._id === event.eventId) {
           setIsMyEvent(true);
         }
       }
+      for (let i = 0; i < data.userInfo.participate.length; i++) {
+        if (data.userInfo.participate[i]._id === event.eventId) {
+          setIsParticipate(true);
+        }
+      }
     });
 
+// BTN UNSUSCRIBE
   const unsuscribe = (
     <TouchableOpacity
       style={styles.confirmBtn}
@@ -129,10 +135,29 @@ export default function EventScreen({ navigation }) {
     </TouchableOpacity>
   );
 
+// BTN DELETE
   const deleteEvent = (
     <TouchableOpacity style={styles.confirmBtn} onPress={() => handleDelete()}>
       <Text style={styles.textButton}>DELETE</Text>
     </TouchableOpacity>
+  );
+
+// BTN STAR AND CONFIRM
+  const buttonStar = (
+    <TouchableOpacity style={styles.confirmBtn}>
+    <FontAwesomeIcon
+      style={styles.textButton}
+      icon={faStar}
+      size={26}/>
+  </TouchableOpacity>
+  );
+
+  const buttonConfirm = (
+    <TouchableOpacity
+    style={styles.confirmBtn}
+    onPress={() => handleParticipate()}>
+    <Text style={styles.textButton}>CONFIRM</Text>
+  </TouchableOpacity>
   );
 
   // PAGE >>>>>>>>>>>
@@ -189,23 +214,9 @@ export default function EventScreen({ navigation }) {
         </View>
         {/* BTN STAR AND CONFIRM */}
         <View style={styles.buttonContainer}>
-          {isMyEvent ? deleteEvent : unsuscribe}
-
-          <TouchableOpacity style={styles.confirmBtn}>
-            <FontAwesomeIcon
-              style={styles.textButton}
-              icon={faStar}
-              size={26}
-              s
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.confirmBtn}
-            onPress={() => handleParticipate()}
-          >
-            <Text style={styles.textButton}>CONFIRM</Text>
-          </TouchableOpacity>
+          {isMyEvent ? deleteEvent : ''}
+          {isParticipate ? unsuscribe : ''}
+          {!isMyEvent && !isParticipate ? buttonConfirm : ''}
         </View>
       </View>
     </ImageBackground>
@@ -315,7 +326,7 @@ const styles = StyleSheet.create({
   //
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
     width: "100%",
     height: "8%",
