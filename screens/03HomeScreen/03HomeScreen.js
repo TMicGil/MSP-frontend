@@ -51,6 +51,7 @@ import {
       .then(response => response.json())
       .then(data => {
         const realData = data.events.map((event) => {
+          console.log('---ALL EVENTS', event)
           const eventInformation = { eventId: event._id, userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour.slice(11, 16), latitude: event.latitude, longitude: event.longitude, description: event.description, address: event.address}
           dispatch(eventGeoLocation(eventInformation))
           return eventInformation

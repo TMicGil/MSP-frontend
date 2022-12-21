@@ -214,9 +214,10 @@ export default function EventScreen({ navigation }) {
         </View>
         {/* BTN STAR AND CONFIRM */}
         <View style={styles.buttonContainer}>
-          {isMyEvent ? deleteEvent : ''}
-          {isParticipate ? unsuscribe : ''}
-          {!isMyEvent && !isParticipate ? buttonConfirm : ''}
+          {isMyEvent ? deleteEvent : false}
+          {isParticipate ? unsuscribe : false}
+          {!isMyEvent && !isParticipate ? buttonStar : false}
+          {!isMyEvent && !isParticipate ? buttonConfirm : false}
         </View>
       </View>
     </ImageBackground>
@@ -340,6 +341,7 @@ const styles = StyleSheet.create({
     height: "85%",
     backgroundColor: "#E74C3C",
     borderRadius: 10,
+    marginRight: 10,
   },
   textButton: {
     color: "#ffffff",
