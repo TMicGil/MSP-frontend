@@ -17,6 +17,7 @@ import {
   import { eventGeoLocation } from "../../reducers/location";
   import { transferEvent } from "../../reducers/event";
   import { transferUser } from "../../reducers/goprofile";
+  import { useFocusEffect } from "@react-navigation/native";
 
 
   export default function HomeScreen({navigation}) {
@@ -51,7 +52,6 @@ import {
       .then(response => response.json())
       .then(data => {
         const realData = data.events.map((event) => {
-          console.log('---ALL EVENTS', event)
           const eventInformation = { eventId: event._id, userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour.slice(11, 16), latitude: event.latitude, longitude: event.longitude, description: event.description, address: event.address}
           dispatch(eventGeoLocation(eventInformation))
           return eventInformation
@@ -67,7 +67,7 @@ import {
     } 
 
 
-// CREATE EACH COMPONENT OF THE LIST WITH PROPS FROM THE DATABASE
+// CREATE EACH COMPONENT OF THE LIST WITH PROPS FROM THE DATABASE + GO TO THE PROFILE OF THE USER
     const eachEventList2 = eventData.map((data, i) => {
       const transferEventData = {eventId: data.eventId, username: data.userId[0].firstname, sport: data.sport, date: data.date, hour: data.hour, description: data.description, latitude: data.latitude, longitude: data.longitude, address: data.address}
       const transferUserData = {token: data.userId[0].token, username: data.userId[0].firstname, dateOfBirth: data.userId[0].dateOfBirth, level: data.userId[0].level, sport: data.userId[0].sport, description: data.userId[0].description, events: data.userId[0].events, participate: data.userId[0].participate}

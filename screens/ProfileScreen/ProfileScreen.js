@@ -11,9 +11,10 @@ import {
   Alert,
 } from "react-native";
 import { useSelector } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function ProfileScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
@@ -108,6 +109,7 @@ export default function ProfileScreen({ navigation }) {
 
   // .MAP TO GET AND DISPLAY ALL THE EVENTS CREATED BY THE USER
   const eachUserEvent = userEvents.map((event, i) => {
+    console.log(event)
     return (
       <View key={i} style={styles.eachEventContainer}>
         <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
