@@ -68,6 +68,7 @@ import {
 
 // CREATE EACH COMPONENT OF THE LIST WITH PROPS FROM THE DATABASE
     const eachEventList2 = eventData.map((data, i) => {
+      console.log('-- DATA FROM MAP EACH EVENT', data.userId)
       const transferEventData = {eventId: data.eventId, username: data.userId[0].firstname, sport: data.sport, date: data.date, hour: data.hour, description: data.description, latitude: data.latitude, longitude: data.longitude, address: data.address}
       const transferUserData = {username: data.userId[0].firstname, dateOfBirth: data.userId[0].dateOfBirth, level: data.userId[0].level, sport: data.userId[0].sport, description: data.userId[0].description, events: data.userId[0].events, participate: data.userId[0].participate}
       const handleEvent= () => {
@@ -80,7 +81,6 @@ import {
       }
       return <View key={i} style={styles.cardEventContainer}>
 
-      
       <View style={styles.eventUserInfo}>
       <TouchableOpacity onPress={() => handleGoProfile()}>
       <Text style={styles.eventListInfo}>{data.userId[0].firstname}</Text>
@@ -88,9 +88,6 @@ import {
       </TouchableOpacity>
       </View>
    
-
-
-
       <View style={styles.eventInfoContainer}>
 
         <View style={styles.sportAndLogoContainer}>
