@@ -108,13 +108,16 @@ export default function EventScreen({ navigation }) {
       });
   };
 
+  // IS MY EVENT ? 
   fetch(`https://msp-backend.vercel.app/users/${user.token}`)
     .then((response) => response.json())
     .then((data) => {
-      if (data.result) {
-        data.events;
+      console.log(data.userInfo.events)
+      for (let i = 0; i < data.userInfo.events.length; i++) {
+        if (data.userInfo.events[i]._id === event.eventId) {
+          setIsMyEvent(true);
+        }
       }
-      setIsMyEvent(true);
     });
 
   const unsuscribe = (
