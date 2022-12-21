@@ -16,6 +16,7 @@ import EventScreen from './screens/EventScreen/EventScreen';
 import MyEventScreen from './screens/MyEventScreen/MyEventScreen';
 import MessageScreen from './screens/MessagesScreen/MessagesScreen';
 import SettingsScreen from './screens/SettingScreen/SettingsScreen';
+import UserScreen from './screens/ProfileScreen/UserScreen';
 import { useCallback } from 'react';
 import { Text } from 'react-native';
 // REDUCERS
@@ -24,9 +25,10 @@ import { configureStore } from '@reduxjs/toolkit';
 import user from './reducers/user';
 import location from './reducers/location';
 import event from './reducers/event';
+import goprofile from './reducers/goprofile';
 
 const store = configureStore({
-  reducer: {user, location, event}
+  reducer: {user, location, event, goprofile}
 })
 
 SplashScreen.preventAutoHideAsync();
@@ -70,6 +72,7 @@ const HomeNavigator = () => {
           <Stack.Screen name="MessageScreen" component={MessageScreen} />
           <Stack.Screen name="Event" component={EventScreen} />
           <Stack.Screen name="MyEvent" component={MyEventScreen} />
+          <Stack.Screen name="UserScreen" component={UserScreen}/>
       </Stack.Navigator>
 
   )

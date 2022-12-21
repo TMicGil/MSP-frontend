@@ -231,9 +231,7 @@ export default function ProfileScreen({ navigation }) {
         <View style={styles.myEventContainer}>
           <Text style={styles.textTitle}>{user.firstname}'s events :</Text>
           <View style={styles.listOfEvents}>
-            <View style={styles.eachEventContainer}>
               {eachUserEvent.length === 0 ? noEvents : eachUserEvent}
-            </View>
           </View>
         </View>
         {/* PARTICIPATE TO */}

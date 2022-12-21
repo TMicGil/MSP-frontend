@@ -18,8 +18,7 @@ export const eventSlice = createSlice({
         state.value.description = action.payload.description;
         state.value.latitude = action.payload.latitude;
         state.value.longitude = action.payload.longitude;
-
-    }
+    },
   },
 });
 

@@ -16,6 +16,7 @@ import {
   import { faEnvelope, faStar } from "@fortawesome/free-solid-svg-icons";
   import { eventGeoLocation } from "../../reducers/location";
   import { transferEvent } from "../../reducers/event";
+  import { transferUser } from "../../reducers/goprofile";
 
 
   export default function HomeScreen({navigation}) {
@@ -68,18 +69,25 @@ import {
 // CREATE EACH COMPONENT OF THE LIST WITH PROPS FROM THE DATABASE
     const eachEventList2 = eventData.map((data, i) => {
       const transferEventData = {eventId: data.eventId, username: data.userId[0].firstname, sport: data.sport, date: data.date, hour: data.hour, description: data.description, latitude: data.latitude, longitude: data.longitude, address: data.address}
+      const transferUserData = {username: data.userId[0].firstname, dateOfBirth: data.userId[0].dateOfBirth, level: data.userId[0].level, sport: data.userId[0].sport, description: data.userId[0].description, events: data.userId[0].events, participate: data.userId[0].participate}
       const handleEvent= () => {
         dispatch(transferEvent(transferEventData))
         navigation.navigate('Event')
       }
+      const handleGoProfile = () => {
+        dispatch(transferUser(transferUserData))
+        navigation.navigate('UserScreen')
+      }
       return <View key={i} style={styles.cardEventContainer}>
 
+      
       <View style={styles.eventUserInfo}>
-      <View style={styles.profilePic}>
-      </View>
+      <TouchableOpacity onPress={() => handleGoProfile()}>
       <Text style={styles.eventListInfo}>{data.userId[0].firstname}</Text>
       <Text style={styles.eventListInfo}>{data.userId[0].level}</Text>
+      </TouchableOpacity>
       </View>
+   
 
 
 
@@ -269,12 +277,7 @@ import {
       eventUserInfo: {
         width: '22%',
         alignItems: 'center',
-      },
-      profilePic: {
-        width: '100%',
-        height: '40%',
-        backgroundColor: 'orange',
-        borderRadius: '50%',
+        paddingTop: 30,
       },
       eventInfoContainer: {
         margin: 10,
