@@ -30,7 +30,8 @@ export default function ProfileScreen({ navigation }) {
   const [userDateBirth, setUserDateBirth] = useState(0);
 
   // GET USER INFO FROM DATABASE
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
     fetch(`https://msp-backend.vercel.app/users/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
@@ -44,7 +45,7 @@ export default function ProfileScreen({ navigation }) {
         }
         setHasPermission(true);
       });
-  }, []);
+  }, []));
 
   if (!hasPermission) {
     return (

@@ -5,10 +5,11 @@ import {
     TouchableOpacity,
     ImageBackground,
   } from "react-native";
-  import { useEffect, useState } from "react";
+  import { useCallback, useEffect, useState } from "react";
   import { useSelector } from "react-redux";
   import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
   import { faStar } from "@fortawesome/free-solid-svg-icons";
+  import { useFocusEffect } from "@react-navigation/native";
   
   export default function UserScreen({ navigation }) {
     const goprofile = useSelector((state) => state.goprofile.value);
@@ -19,8 +20,8 @@ import {
     const [participate, setParticipate] = useState([])
 
 // FETCH TO GET ALL EVENTS AND PARTICIPATE RELATED TO THE USER CLICKED
-//  1° use effect
-    useEffect(() => {
+    useFocusEffect(
+      useCallback(() => {
         fetch(`https://msp-backend.vercel.app/users/${goprofile.token}`)
         .then(response => response.json())
         .then(data => {
@@ -32,7 +33,7 @@ import {
             setHasPermission(true);
 
         })
-    }, [])
+    }, []))
 
     if (!hasPermission) {
         return <View><Text>Loading...</Text></View>

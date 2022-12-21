@@ -8,7 +8,7 @@ import {
     ImageBackground,
     ScrollView,
   } from "react-native";
-  import { useEffect, useState } from 'react';
+  import { useCallback, useEffect, useState } from 'react';
   import { useDispatch, useSelector } from "react-redux";
   import { userGeoLocation } from "../../reducers/user";
   import * as Location from 'expo-location';
@@ -47,12 +47,13 @@ import {
     }, []);
 
 // GET ALL EVENTS FROM DATABASE FOR THE FEED
-    useEffect(() =>{
+    useFocusEffect(
+      useCallback(() =>{
       fetch("https://msp-backend.vercel.app/events/all")
       .then(response => response.json())
       .then(data => {
         const realData = data.events.map((event) => {
-          const eventInformation = { eventId: event._id, userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour.slice(11, 16), latitude: event.latitude, longitude: event.longitude, description: event.description, address: event.address}
+          const eventInformation = { latitude: event.latitude, longitude: event.longitude, eventId: event._id, userId: event.user, sport: event.sport, date: event.date.slice(5, 10), hour: event.hour.slice(11, 16), description: event.description, address: event.address}
           dispatch(eventGeoLocation(eventInformation))
           return eventInformation
         })
@@ -60,7 +61,7 @@ import {
         setHasPermission(true);
       }
       )
-    }, []);
+    }, []));
 
     if (!hasPermission) {
       return <View><Text>Loading...</Text></View>
