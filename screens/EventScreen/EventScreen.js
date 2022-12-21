@@ -55,7 +55,6 @@ export default function EventScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(" ///// RESPONSE FROM DATABASE PARTICIPATE :", data);
         if (data.result) {
           Alert.alert(
             "Confirmation :",

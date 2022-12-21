@@ -5,15 +5,39 @@ import {
     TouchableOpacity,
     ImageBackground,
   } from "react-native";
+  import { useEffect, useState } from "react";
   import { useSelector } from "react-redux";
   import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
   import { faStar } from "@fortawesome/free-solid-svg-icons";
   
   export default function UserScreen({ navigation }) {
     const goprofile = useSelector((state) => state.goprofile.value);
-  
-    console.log('// transfered data :' , goprofile);
-  
+
+    const [hasPermission, setHasPermission] = useState(false);
+
+    const [events, setEvents] = useState([]);
+    const [participate, setParticipate] = useState([])
+
+// FETCH TO GET ALL EVENTS AND PARTICIPATE RELATED TO THE USER CLICKED
+//  1° use effect
+    useEffect(() => {
+        fetch(`https://msp-backend.vercel.app/users/${goprofile.token}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.userInfo.ev)
+            if (data.result) {
+                setEvents(data.userInfo.events)
+                setParticipate(data.userInfo.participate)
+            }
+            setHasPermission(true);
+
+        })
+    }, [])
+
+    if (!hasPermission) {
+        return <View><Text>Loading...</Text></View>
+      } 
+
     // MAP TO GET AND DISPLAY ALL THE SPORT SELECTED IN THE REDUCER
     const eachUserSport = goprofile.sport.map((sport, i) => {
       return (
@@ -39,7 +63,7 @@ import {
     };
   
     // .MAP TO GET AND DISPLAY ALL THE EVENTS CREATED BY THE USER
-    {/*const eachUserEvent = goprofile.events.map((event, i) => {
+    const eachUserEvent = events.map((event, i) => {
       return (
         <View key={i} style={styles.eachEventContainer}>
           <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
@@ -50,7 +74,7 @@ import {
     });
   
     // .MAP TO GET AND DISPLAY ALL THE PARTICIPATION OF THE USER
-    const eachUserParticipate = goprofile.participate.map((event, i) => {
+    const eachUserParticipate = participate.map((event, i) => {
       return (
         <View key={i} style={styles.eachEventContainer}>
           <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
@@ -58,7 +82,7 @@ import {
           <Text style={styles.eventText}>{event.hour.slice(11, 16)}</Text>
         </View>
       );
-    }); */}
+    }); 
   
     // BACK UP IF NO EVENTS CREATED OR NO PARTICIPATION
     let noEvents = (
@@ -116,14 +140,16 @@ import {
           <View style={styles.myEventContainer}>
             <Text style={styles.textTitle}>{goprofile.username}'s events :</Text>
             <View style={styles.listOfEvents}>
-                {noEvents}
+            {eachUserEvent.length === 0 ? noEvents : eachUserEvent}
             </View>
           </View>
           {/* PARTICIPATE TO */}
           <View style={styles.eventContainer}>
             <Text style={styles.textTitle}>Participate to</Text>
             <View style={styles.listOfEvents}>
-              {noParticipate}
+            {eachUserParticipate.length === 0
+              ? noParticipate
+              : eachUserParticipate}
             </View>
           </View>
         </View>

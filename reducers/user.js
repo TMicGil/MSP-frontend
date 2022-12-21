@@ -16,7 +16,6 @@ export const userSlice = createSlice({
     signUp: (state, action) => {
         state.value.firstname = action.payload.firstname;
         state.value.email = action.payload.email;
-        state.value.password = action.payload.password;
         state.value.token = action.payload.token;
     },
     userGeoLocation: (state, action) => {
@@ -30,6 +29,7 @@ export const userSlice = createSlice({
         state.value.email = null;
         state.value.password = null;
         state.value.token = null;
+        state.value.userId = null;
     },
   },
 });

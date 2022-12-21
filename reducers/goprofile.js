@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  value: {username: null, dateOfBirth: null, level: null, sport: null, description: null, events: null, participate: null}
+  value: {userId: null, username: null, dateOfBirth: null, level: null, sport: null, description: null, events: null, participate: null}
 };
 
 export const goprofileSlice = createSlice({
@@ -10,6 +10,7 @@ export const goprofileSlice = createSlice({
   reducers: {
     transferUser : (state, action) => {
       state.value.username = action.payload.username;
+      state.value.token = action.payload.token
       state.value.dateOfBirth = action.payload.dateOfBirth;
       state.value.level = action.payload.level;
       state.value.sport = action.payload.sport;

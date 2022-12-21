@@ -94,7 +94,6 @@ export default function LoginScreen({ navigation }) {
               signUp({
                 firstname: signUpFirstname,
                 email: signUpMail,
-                password: signUpPassword,
                 token: data.token,
               })
             );
