@@ -110,7 +110,6 @@ export default function ProfileScreen({ navigation }) {
 
   // .MAP TO GET AND DISPLAY ALL THE EVENTS CREATED BY THE USER
   const eachUserEvent = userEvents.map((event, i) => {
-    console.log(event)
     return (
       <View key={i} style={styles.eachEventContainer}>
         <Text style={styles.eventText}>{event.date.slice(5, 10)}</Text>
