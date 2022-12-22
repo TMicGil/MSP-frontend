@@ -33,6 +33,8 @@ export default function LoginScreen({ navigation }) {
   const [signinEmailError, setsigninEmailError] = useState(false);
   const [signupEmailError, setsignupEmailError] = useState(false);
 
+  const [wrongPassword, setWrongPassword] = useState(false);
+
   const [isSecure, setIsSecure] = useState(false);
   const [signinPasswordVisible, setSigninPasswordVisible] = useState(false);
   const [signupPasswordVisible, setSignupPasswordVisible] = useState(false);
@@ -202,7 +204,9 @@ export default function LoginScreen({ navigation }) {
                   <Text style={styles.textButton}>Sign in</Text>
                 </TouchableOpacity>
                 {signinEmailError && (
-                  <Text style={styles.error}>Invalid email address</Text>
+                  <Text style={styles.error}>
+                    Invalid email or wrong password
+                  </Text>
                 )}
               </View>
             </View>
