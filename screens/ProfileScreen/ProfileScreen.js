@@ -9,25 +9,31 @@ import {
   TouchableOpacity,
   ImageBackground,
   Alert,
+  ScrollView,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar, faPenToSquare, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useFocusEffect } from "@react-navigation/native";
+import { transferEvent } from "../../reducers/event";
 
 export default function ProfileScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
 
   const [hasPermission, setHasPermission] = useState(false);
 
   const [userEvents, setUserEvents] = useState([]);
   const [userParticipate, setUserParticipate] = useState([]);
   const [userSports, setUserSports] = useState([]);
+  const [userFavorite, setUserFavorite] = useState([]);
   const [userDescription, setUserDescription] = useState("");
   const [userLevel, setUserLevel] = useState("");
-  const [descriptionModal, setDescriptionModal] = useState(false);
   const [userDateBirth, setUserDateBirth] = useState(0);
+
+  const [descriptionModal, setDescriptionModal] = useState(false);
+  const [favoriteModal, setFavoriteModal] = useState(false);
 
   // GET USER INFO FROM DATABASE
   useFocusEffect(
@@ -36,6 +42,7 @@ export default function ProfileScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          setUserFavorite(data.userInfo.favorites)
           setUserSports(data.userInfo.sport);
           setUserDateBirth(data.userInfo.dateOfBirth);
           setUserDescription(data.userInfo.description);
@@ -64,6 +71,21 @@ export default function ProfileScreen({ navigation }) {
     );
   });
 
+  // MAP TO GET AND DISPLAY ALL THE USER FAVORITE
+  const eachUserFavorite = userFavorite.map((favorite, i) => {
+    const transferEventData = {eventId: favorite._id, level: favorite.user[0].level, username: favorite.user[0].firstname, sport: favorite.sport, date: favorite.date.slice(5, 10), hour: favorite.hour.slice(11, 16), description: favorite.description, latitude: favorite.latitude, longitude: favorite.longitude, address: favorite.address}
+    const handleGoEvent = () => {
+      dispatch(transferEvent(transferEventData))
+      navigation.navigate('Event')
+      setFavoriteModal(!favoriteModal)
+    }
+    return (
+      <TouchableOpacity key={i} onPress={() => handleGoEvent()}>
+      <Text key={i} style={styles.eachFavoriteText}>{favorite.sport} with {favorite.user[0].firstname}, {favorite.date.slice(5, 10)} at {favorite.hour.slice(11, 16)}</Text>
+      </TouchableOpacity>
+    )
+  })
+
   // GET THE USER's AGE FOR HEADER
   const getAge = (stringDate) => {
     const today = new Date();
@@ -83,6 +105,12 @@ export default function ProfileScreen({ navigation }) {
   const showDescriptionModal = () => {
     setDescriptionModal(!descriptionModal);
   };
+
+  // MODAL TO DISPLAY FAVORITES
+  const showFavoriteModal = () => {
+    setFavoriteModal(!favoriteModal);
+  }
+
 
   // SEND THE USER DESCRIPTION TO DB
   const sendDescription = () => {
@@ -191,13 +219,37 @@ export default function ProfileScreen({ navigation }) {
             </View>
           </KeyboardAvoidingView>
         </Modal>
+        {/* MODAL TO DISPLAY FAVORITES */}
+        <Modal visible={favoriteModal} animationType="fade" transparent>
+            <View style={styles.centeredView}>
+              <View style={styles.modalFavoriteView}>
+
+              <View style={styles.xmarkContainer}>
+                <TouchableOpacity onPress={() => showFavoriteModal()}>
+                  <FontAwesomeIcon icon={faXmark} size={26} />
+                </TouchableOpacity>
+
+              </View>
+
+                <Text style={styles.textTitleSml}>
+                  Your favorites :
+                </Text>
+
+                <View style={styles.favoritesListing}>
+                  {eachUserFavorite}
+                </View>
+
+                
+              </View>
+            </View>
+        </Modal>
         {/* HEADER */}
         <View style={styles.headerContainer}>
           <View style={styles.userInfoContainer}>
             <View style={styles.image}></View>
             <View style={styles.userInfo}>
               <Text style={styles.textsmallname}>{user.firstname}</Text>
-              <Text style={styles.textsmallinfo}>City</Text>
+              <Text style={styles.textsmallinfo}>Nice</Text>
               <Text style={styles.textsmallinfo}>
                 {getAge(userDateBirth)} years old
               </Text>
@@ -221,7 +273,7 @@ export default function ProfileScreen({ navigation }) {
             style={styles.modifyBtn}
             onPress={() => showDescriptionModal()}
           >
-            <Text style={styles.textButton}>Modify</Text>
+            <FontAwesomeIcon style={styles.textButton} icon={faPenToSquare} size={24}/>
           </TouchableOpacity>
         </View>
         {/* MY SPORTS */}
@@ -231,19 +283,30 @@ export default function ProfileScreen({ navigation }) {
         </View>
         {/* MY EVENTS */}
         <View style={styles.myEventContainer}>
-          <Text style={styles.textTitle}>{user.firstname}'s events :</Text>
+          <Text style={styles.textTitle}>My events :</Text>
+          <ScrollView style={{width: '98%'}}>
           <View style={styles.listOfEvents}>
               {eachUserEvent.length === 0 ? noEvents : eachUserEvent}
           </View>
+          </ScrollView>
         </View>
         {/* PARTICIPATE TO */}
         <View style={styles.eventContainer}>
-          <Text style={styles.textTitle}>Participate to</Text>
+          <Text style={styles.textTitle}>My participation :</Text>
+          <ScrollView style={{width: '98%'}}>
           <View style={styles.listOfEvents}>
             {eachUserParticipate.length === 0
               ? noParticipate
               : eachUserParticipate}
           </View>
+          </ScrollView>
+        </View>
+        {/* FAVORITES */}
+        <View style={styles.favsContainer}>
+          <Text style={styles.textTitle}>My Favorites :</Text>
+          <TouchableOpacity onPress={() => showFavoriteModal()} style={styles.favoriteBtn}>
+            <FontAwesomeIcon style={styles.textFavorite} icon={faStar} size={26}/>
+          </TouchableOpacity>
         </View>
       </View>
     </ImageBackground>
@@ -314,6 +377,42 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: "Poppins-Medium",
   },
+  // FAVORITE MODAL
+  modalFavoriteView: {
+    backgroundColor: "white",
+    width: "80%",
+    height: "50%",
+    borderRadius: 20,
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  xmarkContainer: {
+    width: "100%",
+    height: "7%",
+    alignItems: "flex-end",
+  },
+  favoritesListing: {
+    marginTop: 10,
+    width: '100%',
+    height: '10%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E74C3C',
+  },
+  eachFavoriteText: {
+    fontSize: 15,
+    fontFamily: "Poppins-Medium",
+  },
   // HEADER
   headerContainer: {
     width: "100%",
@@ -371,13 +470,13 @@ const styles = StyleSheet.create({
   // DESCRIPTION
   descriptionContainer: {
     width: "97%",
-    height: "20%",
-    flexDirection: "column",
-    alignItems: "center",
+    height: "15%",
+    flexDirection: 'row',
+    alignItems: "flex-start",
   },
   descriptionText: {
-    width: 350,
-    height: "55%",
+    width: 330,
+    height: "90%",
     borderColor: "#E74C3C",
     borderWidth: 1,
     borderRadius: 10,
@@ -390,8 +489,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingTop: 4,
-    width: "40%",
-    marginTop: 10,
+    width: "10%",
+    height: 40,
     backgroundColor: "#E74C3C",
     borderRadius: 10,
   },
@@ -437,6 +536,7 @@ const styles = StyleSheet.create({
   },
   listOfEvents: {
     padding: 10,
+    height: 100,
   },
   eachEventContainer: {
     backgroundColor: "#E74C3C",
@@ -448,6 +548,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderRadius: 10,
+  },
+  // FAVS
+  favsContainer: {
+      width: "100%",
+      height: "7%",
+      flexDirection: 'row',
+      alignItems: 'center',
+  },
+  favoriteBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "25%",
+    height: "80%",
+    backgroundColor: "#E74C3C",
+    borderRadius: 10,
+    marginRight: 10,
+    marginLeft: 90,
+  },
+  textFavorite: {
+    color: "white",
+    fontWeight: "600",
+    fontSize: 16,
+    fontFamily: "Poppins-Regular",
   },
   //   TEXT
   textTitle: {

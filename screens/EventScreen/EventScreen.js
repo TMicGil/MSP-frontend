@@ -23,6 +23,7 @@ export default function EventScreen({ navigation }) {
 
   const event = useSelector((state) => state.event.value);
   const user = useSelector((state) => state.user.value);
+  console.log('//EVENT REDUCER', event)
 
   // USE EFFECT FOR GETTING THE COORDINATE (FOR THE MARKER) OF THE EVENT
   useEffect(() => {
@@ -242,6 +243,7 @@ export default function EventScreen({ navigation }) {
             <View style={styles.image}></View>
             <View style={styles.userInfo}>
               <Text style={styles.textsmallname}>{event.username}</Text>
+              <Text style={styles.textsmallname}>{event.level}</Text>
             </View>
           </View>
 

@@ -111,7 +111,7 @@ import {
               <View style={styles.image}></View>
               <View style={styles.userInfo}>
                 <Text style={styles.textsmallname}>{goprofile.username}</Text>
-                <Text style={styles.textsmallinfo}>City</Text>
+                <Text style={styles.textsmallinfo}>Nice</Text>
                 <Text style={styles.textsmallinfo}>
                   {getAge(goprofile.dateOfBirth)} years old
                 </Text>

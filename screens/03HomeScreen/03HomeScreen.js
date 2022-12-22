@@ -70,7 +70,7 @@ import {
 
 // CREATE EACH COMPONENT OF THE LIST WITH PROPS FROM THE DATABASE + GO TO THE PROFILE OF THE USER
     const eachEventList2 = eventData.map((data, i) => {
-      const transferEventData = {eventId: data.eventId, username: data.userId[0].firstname, sport: data.sport, date: data.date, hour: data.hour, description: data.description, latitude: data.latitude, longitude: data.longitude, address: data.address}
+      const transferEventData = {eventId: data.eventId, level: data.userId[0].level, username: data.userId[0].firstname, sport: data.sport, date: data.date, hour: data.hour, description: data.description, latitude: data.latitude, longitude: data.longitude, address: data.address}
       const transferUserData = {token: data.userId[0].token, username: data.userId[0].firstname, dateOfBirth: data.userId[0].dateOfBirth, level: data.userId[0].level, sport: data.userId[0].sport, description: data.userId[0].description, events: data.userId[0].events, participate: data.userId[0].participate}
       const handleEvent= () => {
         dispatch(transferEvent(transferEventData))
@@ -110,9 +110,6 @@ import {
         </View>
 
         <View style={styles.eventGoBtnContainer}>
-            <FontAwesomeIcon
-              icon={faStar}
-              size={22}/>
             <TouchableOpacity style={styles.eventGoBtn} onPress={() => handleEvent()}>
                 <Text style={styles.eventGoBtnText}>GO</Text>
             </TouchableOpacity>
@@ -134,7 +131,7 @@ import {
                     <View style={styles.image}></View>
                     <View style={styles.userInfo}>
                       <Text style={styles.textsmallname}>{user.firstname}</Text>
-                      <Text style={styles.textsmallname}>City</Text>
+                      <Text style={styles.textsmallname}>Nice</Text>
                     </View>
                 </View>
                 </TouchableOpacity>
@@ -303,7 +300,7 @@ import {
   
       },
       eventGoBtnContainer: {
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         flexDirection: 'row',
   
       },

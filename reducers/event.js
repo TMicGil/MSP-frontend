@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  value: {eventId: null, username: null, sport: null, date: null, hour: null, address: null, description: null, latitude: null, longitude: null}
+  value: {eventId: null, username: null, level: null, sport: null, date: null, hour: null, address: null, description: null, latitude: null, longitude: null}
 };
 
 export const eventSlice = createSlice({
@@ -11,6 +11,7 @@ export const eventSlice = createSlice({
     transferEvent: (state, action) => {
         state.value.eventId = action.payload.eventId;
         state.value.username = action.payload.username;
+        state.value.level = action.payload.level;
         state.value.sport = action.payload.sport;
         state.value.date = action.payload.date;
         state.value.hour = action.payload.hour;
