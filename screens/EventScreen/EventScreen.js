@@ -62,6 +62,7 @@ export default function EventScreen({ navigation }) {
             "Your inscription has been confirmed:)",
             { cancelable: true }
           );
+          navigation.navigate("HomeNavigator");
         }
       });
   };
@@ -125,7 +126,7 @@ export default function EventScreen({ navigation }) {
       }
     });
 
-// BTN UNSUSCRIBE
+  // BTN UNSUSCRIBE
   const unsuscribe = (
     <TouchableOpacity
       style={styles.confirmBtn}
@@ -135,30 +136,53 @@ export default function EventScreen({ navigation }) {
     </TouchableOpacity>
   );
 
-// BTN DELETE
+  // BTN DELETE
   const deleteEvent = (
     <TouchableOpacity style={styles.confirmBtn} onPress={() => handleDelete()}>
       <Text style={styles.textButton}>DELETE</Text>
     </TouchableOpacity>
   );
 
-// BTN STAR AND CONFIRM
+  // BTN STAR AND CONFIRM
   const buttonStar = (
-    <TouchableOpacity style={styles.confirmBtn}>
-    <FontAwesomeIcon
-      style={styles.textButton}
-      icon={faStar}
-      size={26}/>
-  </TouchableOpacity>
+    <TouchableOpacity
+      style={styles.confirmBtn}
+      onPress={() => handleFavorites()}
+    >
+      <FontAwesomeIcon style={styles.textButton} icon={faStar} size={26} />
+    </TouchableOpacity>
   );
 
   const buttonConfirm = (
     <TouchableOpacity
-    style={styles.confirmBtn}
-    onPress={() => handleParticipate()}>
-    <Text style={styles.textButton}>CONFIRM</Text>
-  </TouchableOpacity>
+      style={styles.confirmBtn}
+      onPress={() => handleParticipate()}
+    >
+      <Text style={styles.textButton}>CONFIRM</Text>
+    </TouchableOpacity>
   );
+
+  const handleFavorites = () => {
+    const body = {
+      token: user.token,
+      eventsId: event.eventId,
+    };
+    fetch("https://msp-backend.vercel.app/events/favorites", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert(
+            "Confirmation :",
+            "Your PAL has been added to your favorites",
+            { cancelable: true }
+          );
+        }
+      });
+  };
 
   // PAGE >>>>>>>>>>>
   return (
