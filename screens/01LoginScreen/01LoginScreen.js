@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux";
 import DiscoverBtn from "./DiscoverBtn";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
-import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons/";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -33,7 +33,43 @@ export default function LoginScreen({ navigation }) {
   const [signinEmailError, setsigninEmailError] = useState(false);
   const [signupEmailError, setsignupEmailError] = useState(false);
 
+  const [isSecure, setIsSecure] = useState(false);
   const [signinPasswordVisible, setSigninPasswordVisible] = useState(false);
+  const [signupPasswordVisible, setSignupPasswordVisible] = useState(false);
+
+  const handlePasswordSignin = () => {
+    setSigninPasswordVisible(!signinPasswordVisible);
+    setIsSecure(!isSecure);
+  };
+
+  const passwordSigninVisible = (
+    <TouchableOpacity style={styles.eye} onPress={() => handlePasswordSignin()}>
+      <FontAwesomeIcon icon={faEye} size={20} />
+    </TouchableOpacity>
+  );
+
+  const passwordSigninInvisible = (
+    <TouchableOpacity style={styles.eye} onPress={() => handlePasswordSignin()}>
+      <FontAwesomeIcon icon={faEyeSlash} size={20} />
+    </TouchableOpacity>
+  );
+
+  const handlePasswordSignup = () => {
+    setSignupPasswordVisible(!signupPasswordVisible);
+    setIsSecure(!isSecure);
+  };
+
+  const passwordSignupVisible = (
+    <TouchableOpacity style={styles.eye} onPress={() => handlePasswordSignup()}>
+      <FontAwesomeIcon icon={faEye} size={20} />
+    </TouchableOpacity>
+  );
+
+  const passwordSignupInvisible = (
+    <TouchableOpacity style={styles.eye} onPress={() => handlePasswordSignup()}>
+      <FontAwesomeIcon icon={faEyeSlash} size={20} />
+    </TouchableOpacity>
+  );
 
   const showSigninModal = () => {
     setSignInModal(!signInModal);
@@ -140,11 +176,15 @@ export default function LoginScreen({ navigation }) {
                   value={signInMail}
                   placeholder="Enter your email"
                 />
-
-                <Text style={styles.inputLabel}>Password</Text>
-
+                <View style={styles.password}>
+                  <Text style={styles.inputLabel}>Password</Text>
+                  {signinPasswordVisible
+                    ? passwordSigninInvisible
+                    : passwordSigninVisible}
+                </View>
                 <TextInput
-                  secureTextEntry={true}
+                  autoCapitalize="none"
+                  secureTextEntry={!isSecure}
                   style={styles.inputs}
                   placeholderTextColor="#ccd1e8"
                   onChangeText={(value) => {
@@ -208,9 +248,15 @@ export default function LoginScreen({ navigation }) {
                   value={signUpMail}
                   placeholder="Enter your email"
                 />
-                <Text style={styles.inputLabel}>Password</Text>
+                <View style={styles.password}>
+                  <Text style={styles.inputLabel}>Password</Text>
+                  {signupPasswordVisible
+                    ? passwordSignupInvisible
+                    : passwordSignupVisible}
+                </View>
                 <TextInput
-                  secureTextEntry={true}
+                  autoCapitalize="none"
+                  secureTextEntry={!isSecure}
                   style={styles.inputs}
                   placeholderTextColor="#ccd1e8"
                   onChangeText={(value) => {
@@ -344,7 +390,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: "10%",
+    borderRadius: 20,
     opacity: 0.9,
   },
   titleContainer: {
@@ -421,5 +467,12 @@ const styles = StyleSheet.create({
   error: {
     marginTop: 10,
     color: "#E74C3C",
+  },
+  password: {
+    flexDirection: "row",
+    marginLeft: 50,
+  },
+  eye: {
+    marginLeft: 30,
   },
 });
