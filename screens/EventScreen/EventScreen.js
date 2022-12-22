@@ -23,7 +23,6 @@ export default function EventScreen({ navigation }) {
 
   const event = useSelector((state) => state.event.value);
   const user = useSelector((state) => state.user.value);
-  console.log('//EVENT REDUCER', event)
 
   // USE EFFECT FOR GETTING THE COORDINATE (FOR THE MARKER) OF THE EVENT
   useEffect(() => {

@@ -25,7 +25,6 @@ import {
         fetch(`https://msp-backend.vercel.app/users/${goprofile.token}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data.userInfo.ev)
             if (data.result) {
                 setEvents(data.userInfo.events)
                 setParticipate(data.userInfo.participate)
