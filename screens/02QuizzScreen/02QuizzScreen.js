@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Alert,
+  ScrollView,
 } from "react-native";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -13,6 +14,7 @@ import { MultipleSelectList } from "react-native-dropdown-select-list";
 import { SelectList } from "react-native-dropdown-select-list";
 import DatePicker from "@react-native-community/datetimepicker";
 import { useSelector } from "react-redux";
+import { height } from "@fortawesome/free-solid-svg-icons/faXmark";
 
 export default function QuizzScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
@@ -104,6 +106,8 @@ export default function QuizzScreen({ navigation }) {
         </View>
 
         {/* CHOICE OF SEX */}
+        <ScrollView style={{width: '95%'}}>
+
         <View style={styles.sexContainer}>
           <TouchableOpacity
             onPress={() => handleSex("male")}
@@ -167,6 +171,7 @@ export default function QuizzScreen({ navigation }) {
             <Text style={styles.questionText}>
               What sport do you practice ?
             </Text>
+            <View style={styles.multipleListContainer}>
             <MultipleSelectList
               setSelected={(val) => setSportPractice(val)}
               data={data}
@@ -176,13 +181,14 @@ export default function QuizzScreen({ navigation }) {
               label="Sports selected"
               labelStyles={{ color: "#E74C3C" }}
               badgeStyles={{ backgroundColor: "#E74C3C" }}
-              badgeTextStyles={{ color: "white", fontSize: 16 }}
-              boxStyles={{ backgroundColor: "white" }}
+              badgeTextStyles={{ color: "white", fontSize: 14 }}
+              boxStyles={{ backgroundColor: "white"}}
               inputStyles={{ color: "#E74C3C" }}
-              dropdownStyles={{ backgroundColor: "white" }}
+              dropdownStyles={{ backgroundColor: "white", height: 200}}
               dropdownTextStyles={{ fontSize: 16 }}
-              maxHeight={200}
+              maxHeight={250}
             />
+            </View>
           </View>
 
           {/* LEVEL SELECTION */}
@@ -214,7 +220,7 @@ export default function QuizzScreen({ navigation }) {
                   alignItems: "center",
                   justifyContent: "center",
                   width: "40%",
-                  height: "40%",
+                  height: "90%",
                   borderRadius: 10,
                 }}
               >
@@ -228,7 +234,7 @@ export default function QuizzScreen({ navigation }) {
                   alignItems: "center",
                   justifyContent: "center",
                   width: "40%",
-                  height: "40%",
+                  height: "90%",
                   borderRadius: 10,
                 }}
               >
@@ -245,6 +251,7 @@ export default function QuizzScreen({ navigation }) {
             </View>
           </View>
         </View>
+        </ScrollView>
       </View>
     </ImageBackground>
   );
@@ -285,6 +292,10 @@ const styles = StyleSheet.create({
   sectionContainer: {
     marginVertical: 5,
   },
+  multipleListContainer: {
+    width: '98%',
+
+  },
   calendarContainer: {
     width: "100%",
     alignItems: "center",
@@ -293,11 +304,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "90%",
+    height: '12%',
   },
   goContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    height: "30%",
+    height: "12%",
+    marginTop: 30,
+    marginBottom: 125,
   },
   calendar: {
     backgroundColor: "#E74C3C",
@@ -317,7 +331,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "30%",
-    height: "40%",
+    height: "100%",
     backgroundColor: "#E74C3C",
     borderRadius: 10,
   },
