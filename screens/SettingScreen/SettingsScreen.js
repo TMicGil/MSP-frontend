@@ -43,12 +43,23 @@ export default function SettingScreen({ navigation }) {
       });
   };
 
+  const handleEditProfile = () => {
+    navigation.navigate("Quizz");
+  };
+
   return (
     <ImageBackground
       style={styles.imgBackground}
       source={require("../../assets/background.jpg")}
     >
       <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.editBtn}
+          onPress={() => handleEditProfile()}
+        >
+          <Text style={styles.editText}>EDIT YOUR PROFILE</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.logoutBtn}
           onPress={() => handleLogout()}
@@ -89,7 +100,7 @@ const styles = StyleSheet.create({
     height: "10%",
     backgroundColor: "#E74C3C",
     borderRadius: 20,
-    marginTop: "150%",
+    marginTop: 50,
   },
   logoutText: {
     color: "#ffffff",
@@ -104,9 +115,24 @@ const styles = StyleSheet.create({
     height: "10%",
     backgroundColor: "#E74C3C",
     borderRadius: 20,
-    marginTop: 30,
+    marginTop: 50,
   },
   deleteText: {
+    color: "#ffffff",
+    fontWeight: "600",
+    fontSize: 25,
+    fontFamily: "Poppins-Light",
+  },
+  editBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80%",
+    height: "10%",
+    backgroundColor: "#E74C3C",
+    borderRadius: 20,
+    marginTop: "30%",
+  },
+  editText: {
     color: "#ffffff",
     fontWeight: "600",
     fontSize: 25,
