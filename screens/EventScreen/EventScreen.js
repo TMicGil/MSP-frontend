@@ -111,53 +111,54 @@ export default function EventScreen({ navigation }) {
       });
   };
 
-    // FUNCTION TO ADD FAVORITE
-      const handleFavorites = () => {
-        const body = {
-          token: user.token,
-          eventsId: event.eventId,
-        };
-        fetch("https://msp-backend.vercel.app/events/favorites", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.result) {
-              Alert.alert(
-                "Confirmation :",
-                "This event has been added to your favorites !",
-                { cancelable: true }
-              );
-              setIsFavorite(true);
-            }
-          });
-      };
+  // FUNCTION TO ADD FAVORITE
+  const handleFavorites = () => {
+    const body = {
+      token: user.token,
+      eventsId: event.eventId,
+    };
+    fetch("https://msp-backend.vercel.app/events/favorites", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert(
+            "Confirmation :",
+            "This event has been added to your favorites !",
+            { cancelable: true }
+          );
+          setIsFavorite(true);
+          navigation.navigate("HomeNavigator");
+        }
+      });
+  };
 
-   // FUNCTION DELETE TO FAVORITE
-      const handleDeleteFavorites = () => {
-        const body = {
-          token: user.token,
-          eventsId: event.eventId,
-        };
-        fetch("https://msp-backend.vercel.app/events/favorites", {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.result) {
-              Alert.alert(
-                "Confirmation :",
-                "This event has been deleted from your favorites !",
-                { cancelable: true }
-              );
-              setIsFavorite(false);
-            }
-          });
-      }
+  // FUNCTION DELETE TO FAVORITE
+  const handleDeleteFavorites = () => {
+    const body = {
+      token: user.token,
+      eventsId: event.eventId,
+    };
+    fetch("https://msp-backend.vercel.app/events/favorites", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert(
+            "Confirmation :",
+            "This event has been deleted from your favorites !",
+            { cancelable: true }
+          );
+          setIsFavorite(false);
+        }
+      });
+  };
 
   // IS MY EVENT ? PARTICIPATE ? FAVORITE ?
   fetch(`https://msp-backend.vercel.app/users/${user.token}`)
@@ -176,9 +177,9 @@ export default function EventScreen({ navigation }) {
       for (let i = 0; i < data.userInfo.favorites.length; i++) {
         if (data.userInfo.favorites[i]._id === event.eventId) {
           setIsFavorite(true);
-      }}
+        }
+      }
     });
-
 
   // BTN UNSUSCRIBE
   const unsuscribe = (
@@ -209,13 +210,12 @@ export default function EventScreen({ navigation }) {
 
   const buttonStarFav = (
     <TouchableOpacity
-    style={styles.favoriteBtn}
-    onPress={() => handleDeleteFavorites()}
-  >
-    <FontAwesomeIcon style={styles.textFavorite} icon={faStar} size={26} />
-  </TouchableOpacity>
-
-  )
+      style={styles.favoriteBtn}
+      onPress={() => handleDeleteFavorites()}
+    >
+      <FontAwesomeIcon style={styles.textFavorite} icon={faStar} size={26} />
+    </TouchableOpacity>
+  );
 
   // BTN CONFIRM
   const buttonConfirm = (
@@ -226,8 +226,6 @@ export default function EventScreen({ navigation }) {
       <Text style={styles.textButton}>CONFIRM</Text>
     </TouchableOpacity>
   );
-
-
 
   // PAGE >>>>>>>>>>>
   return (
