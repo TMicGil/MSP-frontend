@@ -80,9 +80,11 @@ export default function ProfileScreen({ navigation }) {
       setFavoriteModal(!favoriteModal)
     }
     return (
+      <View key={i} style={styles.eachFavContainer}>
       <TouchableOpacity key={i} onPress={() => handleGoEvent()}>
       <Text key={i} style={styles.eachFavoriteText}>{favorite.sport} with {favorite.user[0].firstname}, {favorite.date.slice(5, 10)} at {favorite.hour.slice(11, 16)}</Text>
       </TouchableOpacity>
+      </View>
     )
   })
 
@@ -401,13 +403,19 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   favoritesListing: {
-    marginTop: 10,
+    margin: 30,
     width: '100%',
     height: '10%',
     justifyContent: 'center',
     alignItems: 'center',
+
+  },
+  eachFavContainer: {
     borderBottomWidth: 1,
     borderBottomColor: '#E74C3C',
+    height: '80%',
+    marginTop: 20,
+
   },
   eachFavoriteText: {
     fontSize: 15,
