@@ -107,8 +107,8 @@ export default function App() {
     <SafeAreaProvider onLayout={onLayoutRootView}>
        <NavigationContainer> 
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Quizz" component={QuizzScreen} /> 
           <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Quizz" component={QuizzScreen} /> 
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Map" component={MapScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
