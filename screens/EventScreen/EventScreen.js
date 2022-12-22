@@ -130,6 +130,7 @@ export default function EventScreen({ navigation }) {
                 "This event has been added to your favorites !",
                 { cancelable: true }
               );
+              setIsFavorite(true);
             }
           });
       };
