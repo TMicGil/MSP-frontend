@@ -19,6 +19,7 @@ export default function EventScreen({ navigation }) {
 
   const [isMyEvent, setIsMyEvent] = useState(false);
   const [isParticipate, setIsParticipate] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const event = useSelector((state) => state.event.value);
   const user = useSelector((state) => state.user.value);
@@ -110,7 +111,54 @@ export default function EventScreen({ navigation }) {
       });
   };
 
-  // IS MY EVENT ? PARTICIPATE ?
+    // FUNCTION TO ADD FAVORITE
+      const handleFavorites = () => {
+        const body = {
+          token: user.token,
+          eventsId: event.eventId,
+        };
+        fetch("https://msp-backend.vercel.app/events/favorites", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.result) {
+              Alert.alert(
+                "Confirmation :",
+                "This event has been added to your favorites !",
+                { cancelable: true }
+              );
+            }
+          });
+      };
+
+   // FUNCTION DELETE TO FAVORITE
+      const handleDeleteFavorites = () => {
+        const body = {
+          token: user.token,
+          eventsId: event.eventId,
+        };
+        fetch("https://msp-backend.vercel.app/events/favorites", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.result) {
+              Alert.alert(
+                "Confirmation :",
+                "This event has been deleted from your favorites !",
+                { cancelable: true }
+              );
+              setIsFavorite(false);
+            }
+          });
+      }
+
+  // IS MY EVENT ? PARTICIPATE ? FAVORITE ?
   fetch(`https://msp-backend.vercel.app/users/${user.token}`)
     .then((response) => response.json())
     .then((data) => {
@@ -124,7 +172,12 @@ export default function EventScreen({ navigation }) {
           setIsParticipate(true);
         }
       }
+      for (let i = 0; i < data.userInfo.favorites.length; i++) {
+        if (data.userInfo.favorites[i]._id === event.eventId) {
+          setIsFavorite(true);
+      }}
     });
+
 
   // BTN UNSUSCRIBE
   const unsuscribe = (
@@ -143,7 +196,7 @@ export default function EventScreen({ navigation }) {
     </TouchableOpacity>
   );
 
-  // BTN STAR AND CONFIRM
+  // BTN STAR AND FAVORITE
   const buttonStar = (
     <TouchableOpacity
       style={styles.confirmBtn}
@@ -153,6 +206,17 @@ export default function EventScreen({ navigation }) {
     </TouchableOpacity>
   );
 
+  const buttonStarFav = (
+    <TouchableOpacity
+    style={styles.favoriteBtn}
+    onPress={() => handleDeleteFavorites()}
+  >
+    <FontAwesomeIcon style={styles.textFavorite} icon={faStar} size={26} />
+  </TouchableOpacity>
+
+  )
+
+  // BTN CONFIRM
   const buttonConfirm = (
     <TouchableOpacity
       style={styles.confirmBtn}
@@ -162,27 +226,7 @@ export default function EventScreen({ navigation }) {
     </TouchableOpacity>
   );
 
-  const handleFavorites = () => {
-    const body = {
-      token: user.token,
-      eventsId: event.eventId,
-    };
-    fetch("https://msp-backend.vercel.app/events/favorites", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          Alert.alert(
-            "Confirmation :",
-            "Your PAL has been added to your favorites",
-            { cancelable: true }
-          );
-        }
-      });
-  };
+
 
   // PAGE >>>>>>>>>>>
   return (
@@ -240,7 +284,8 @@ export default function EventScreen({ navigation }) {
         <View style={styles.buttonContainer}>
           {isMyEvent ? deleteEvent : false}
           {isParticipate ? unsuscribe : false}
-          {!isMyEvent && !isParticipate ? buttonStar : false}
+          {!isMyEvent && !isParticipate && !isFavorite ? buttonStar : false}
+          {isFavorite ? buttonStarFav : false}
           {!isMyEvent && !isParticipate ? buttonConfirm : false}
         </View>
       </View>
@@ -366,6 +411,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#E74C3C",
     borderRadius: 10,
     marginRight: 10,
+  },
+  favoriteBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "30%",
+    height: "85%",
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "#E74C3C",
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  textFavorite: {
+    color: "#E74C3C",
+    fontWeight: "600",
+    fontSize: 16,
+    fontFamily: "Poppins-Regular",
   },
   textButton: {
     color: "#ffffff",
