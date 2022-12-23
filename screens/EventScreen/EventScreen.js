@@ -131,7 +131,6 @@ export default function EventScreen({ navigation }) {
             { cancelable: true }
           );
           setIsFavorite(true);
-          navigation.navigate("HomeNavigator");
         }
       });
   };
