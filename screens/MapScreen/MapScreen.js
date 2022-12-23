@@ -33,7 +33,7 @@ import {
                     <View style={styles.image}></View>
                     <View style={styles.userInfo}>
                       <Text style={styles.textsmallname}>{user.firstname}</Text>
-                      <Text style={styles.textsmallname}>City</Text>
+                      <Text style={styles.textsmallname}>Nice</Text>
                     </View>
                 </View>
 
